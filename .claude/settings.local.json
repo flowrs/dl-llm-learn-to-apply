@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:courses.cs.washington.edu)",
+      "WebSearch",
+      "WebFetch(domain:cs231n.github.io)",
+      "WebFetch(domain:cs231n.stanford.edu)",
+      "Bash(dir \"C:\\\\dev\\\\keytech\\\\ai\\\\4931g\" /s /b)",
+      "Bash(git init:*)",
+      "Bash(cmd //c \"rename 4931g dl-llm-learn-to-apply\")",
+      "Bash(git add:*)"
+    ]
+  }
+}
