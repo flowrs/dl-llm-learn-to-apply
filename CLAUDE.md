@@ -267,6 +267,44 @@ Solution: Python console programs for each week:
 - Conceptual explanations alongside visualizations
 - No dependencies (pure Python)
 
+### Phase 12: Structured Course Materials
+
+Added `course/` folder with comprehensive learning materials:
+
+```
+Problem: Need structured, hands-on materials that complement documentation
+
+Solution: Complete course folder with:
+├── Module markdown files (00-08)
+│   ├── Module_00: Math Foundations (linear algebra, calculus, probability)
+│   ├── Module_01: Neural Network Foundations
+│   ├── Module_02: Training and Optimization
+│   ├── Module_03: CNNs
+│   ├── Module_04: Sequence Models (RNNs, LSTMs)
+│   ├── Module_05: Attention and Transformers
+│   ├── Module_06: Large Language Models
+│   ├── Module_07: Generative Models (VAE, GAN, Diffusion)
+│   └── Module_08: Advanced Topics (RAG, Agents, Evaluation)
+│
+├── Interactive Jupyter notebooks for each module
+│   └── Pure NumPy implementations for learning
+│
+├── Glossary.md (~200 terms, A-Z with cross-references)
+│   └── Notation reference, formulas, "See also" links
+│
+└── Exercises_and_Practice_Problems.md
+    ├── Conceptual questions
+    ├── Coding exercises with starter code
+    ├── Debugging exercises
+    └── Integrated projects
+```
+
+**Notebook features:**
+- Pure NumPy implementations (no PyTorch dependency)
+- Step-by-step code with visualizations
+- Each concept implemented from scratch
+- Runnable examples with test code
+
 ## Current Workspace Structure
 
 ```
@@ -288,9 +326,35 @@ Solution: Python console programs for each week:
 ├── Week_05_06_SSL_RNNs.md                 # Self-supervised learning, RNNs
 ├── Week_07_Attention_Transformers.md      # Attention and Transformers
 ├── Week_08_10_Advanced_Topics.md          # Advanced topics
-├── Week_11_Large_Language_Models.md       # LLM comprehensive guide (NEW)
+├── Week_11_Large_Language_Models.md       # LLM comprehensive guide
 │
-├── visualizations/                        # Interactive ASCII visualizers (NEW)
+├── course/                                # Structured course materials (NEW)
+│   ├── README.md                          # Course overview and navigation
+│   ├── Glossary.md                        # Comprehensive A-Z glossary (~200 terms)
+│   ├── Exercises_and_Practice_Problems.md # Exercises by module with solutions
+│   │
+│   ├── Module_00_Math_Foundations.md      # Linear algebra, calculus, probability
+│   ├── Module_01_Neural_Network_Foundations.md
+│   ├── Module_02_Training_and_Optimization.md
+│   ├── Module_03_Convolutional_Neural_Networks.md
+│   ├── Module_04_Sequence_Models.md
+│   ├── Module_05_Attention_and_Transformers.md
+│   ├── Module_06_Large_Language_Models.md
+│   ├── Module_07_Generative_Models.md
+│   ├── Module_08_Advanced_Topics.md
+│   │
+│   └── notebooks/                         # Interactive Jupyter notebooks
+│       ├── Module_00_Math_Foundations.ipynb
+│       ├── Module_01_Neural_Networks.ipynb
+│       ├── Module_02_Training_Optimization.ipynb
+│       ├── Module_03_CNNs.ipynb
+│       ├── Module_04_Sequence_Models.ipynb
+│       ├── Module_05_Attention_Transformers.ipynb
+│       ├── Module_06_Large_Language_Models.ipynb
+│       ├── Module_07_Generative_Models.ipynb
+│       └── Module_08_Advanced_Topics.ipynb
+│
+├── visualizations/                        # Interactive ASCII visualizers
 │   ├── run_visualizations.py              # Main launcher
 │   ├── week_01_02_visualizer.py           # Foundations visualizer
 │   ├── week_03_04_visualizer.py           # CNNs visualizer
@@ -592,7 +656,7 @@ When working in this workspace:
 
 ---
 
-*Last updated: January 2026 (Phase 11)*
+*Last updated: January 2026 (Phase 12)*
 *Workspace purpose: Comprehensive deep learning education from theory to production to people*
 
 ## Changelog
@@ -608,3 +672,8 @@ When working in this workspace:
 - **Phase 9**: Added DL_AND_LLM_IN_PRODUCTION.md (4 case studies of hybrid DL+LLM production systems)
 - **Phase 10**: Added STYLEMATCH_PART_2_THE_LLM_ERA.md (StyleMatch story continues into LLM integration)
 - **Phase 11**: Added Week_11_Large_Language_Models.md (comprehensive LLM guide) and visualizations/ folder (interactive ASCII visualizers for all weeks)
+- **Phase 12**: Added course/ folder with structured learning materials:
+  - Module markdown files (00-08) covering Math Foundations through Advanced Topics
+  - Interactive Jupyter notebooks for each module with runnable code examples
+  - Comprehensive Glossary (~200 terms, A-Z with cross-references)
+  - Exercises and Practice Problems document with solutions by module
