@@ -1,0 +1,515 @@
+======================================================================
+  WEEK 07 VISUALIZATIONS
+======================================================================
+
+
+======================================================================
+
+============================================================
+            VISUALIZATION 1: Attention Intuition            
+============================================================
+
+
+What is Attention?
+===========================================================
+
+Attention allows the model to FOCUS on relevant parts of input.
+
+Example: Translation "The cat sat on the mat"
+
+    When generating "le" (French "the"):
+    +---------------------------------------------+
+    | The   cat   sat   on   the   mat           |
+    | ####  ...   ...   ...  ###   ...           |
+    |  ^                      ^                   |
+    |  +-------- FOCUS -------+                  |
+    +---------------------------------------------+
+    High attention on "The" and "the"!
+
+    When generating "chat" (French "cat"):
+    +---------------------------------------------+
+    | The   cat   sat   on   the   mat           |
+    | ...   ####  ...   ...  ...   ...           |
+    |        ^                                    |
+    |        +----- FOCUS                        |
+    +---------------------------------------------+
+    High attention on "cat"!
+    
+
+============================================================
+
+
+Attention as Weighted Sum
+===========================================================
+
+    Query (Q): "What am I looking for?"
+    Keys (K):  "What information is available?"
+    Values (V): "The actual information"
+
+    Attention(Q, K, V) = softmax(Q x K^T / √d) x V
+
+    Step by step:
+
+    1. Compare query with all keys (dot product)
+       +-----------------------------------+
+       | Q · K_1 = 0.8   "very relevant"   |
+       | Q · K_2 = 0.2   "somewhat"        |
+       | Q · K_3 = 0.1   "not much"        |
+       +-----------------------------------+
+
+    2. Normalize with softmax
+       +-----------------------------------+
+       | softmax([0.8, 0.2, 0.1])          |
+       | = [0.52, 0.28, 0.20]              |
+       |   (weights sum to 1)              |
+       +-----------------------------------+
+
+    3. Weighted sum of values
+       +-----------------------------------+
+       | output = 0.52xV_1 + 0.28xV_2 + 0.20xV_3 |
+       +-----------------------------------+
+    
+
+============================================================
+
+
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+        VISUALIZATION 2: Self-Attention Step by Step        
+============================================================
+
+
+Self-Attention: Each position attends to ALL positions
+===========================================================
+
+Input: "The cat sat"
+
+Step 1: Create Q, K, V for each token
+
+    Token embeddings:
+    +-----+  +-----+  +-----+
+    | The |  | cat |  | sat |
+    | x_1 |  | x_2 |  | x_3 |
+    +--+--+  +--+--+  +--+--+
+       |        |        |
+       v        v        v
+    +--------------------------+
+    |    Linear projections    |
+    |    Q = x·W_Q             |
+    |    K = x·W_K             |
+    |    V = x·W_V             |
+    +--------------------------+
+       |        |        |
+       v        v        v
+    Q_1,K_1,V_1  Q_2,K_2,V_2  Q_3,K_3,V_3
+    
+
+============================================================
+
+
+Step 2: Compute attention scores (Q x K^T)
+===========================================================
+
+Each query attends to all keys:
+
+              Keys
+              K_1   K_2   K_3
+            +-----+-----+-----+
+    Q_1 "The"| 0.9 | 0.3 | 0.2 |  "The" mostly looks at itself
+            +-----+-----+-----+
+    Q_2 "cat"| 0.4 | 0.8 | 0.5 |  "cat" mostly looks at itself
+            +-----+-----+-----+
+    Q_3 "sat"| 0.2 | 0.7 | 0.9 |  "sat" looks at "cat" and itself
+            +-----+-----+-----+
+    Queries
+
+After softmax (rows sum to 1):
+              K_1   K_2   K_3
+            +-----+-----+-----+
+    Q_1     | 0.50| 0.28| 0.22|
+            +-----+-----+-----+
+    Q_2     | 0.24| 0.48| 0.28|
+            +-----+-----+-----+
+    Q_3     | 0.18| 0.38| 0.44|
+            +-----+-----+-----+
+    
+
+============================================================
+
+
+Step 3: Compute output (attention x values)
+===========================================================
+
+    Output_1 = 0.50xV_1 + 0.28xV_2 + 0.22xV_3
+    Output_2 = 0.24xV_1 + 0.48xV_2 + 0.28xV_3
+    Output_3 = 0.18xV_1 + 0.38xV_2 + 0.44xV_3
+
+    +---------------------------------------------------+
+    |                                                   |
+    |  Each output is a BLEND of all input positions   |
+    |  weighted by how relevant they are!               |
+    |                                                   |
+    |  Output for "sat" contains info about:            |
+    |    - "sat" itself (44%)                          |
+    |    - "cat" (38%) <- subject-verb relationship!    |
+    |    - "The" (18%)                                 |
+    |                                                   |
+    +---------------------------------------------------+
+    
+
+============================================================
+
+
+
+----------------------------------------------------------------------
+
+Error capturing week_07_visualizer.visualize_multi_head: module 'week_07_visualizer' has no attribute 'visualize_multi_head'
+
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+         VISUALIZATION 4: Transformer Architecture          
+============================================================
+
+
+The Transformer: "Attention Is All You Need"
+===========================================================
+
+No recurrence, no convolution - ONLY attention!
+
+                         TRANSFORMER
+    +-------------------------------------------------+
+    |                                                 |
+    |  Input Tokens                  Output Tokens    |
+    |       v                             ^          |
+    |  +---------+                  +---------+      |
+    |  |Embedding|                  | Linear  |      |
+    |  |+ PositE |                  |+Softmax |      |
+    |  +----+----+                  +----+----+      |
+    |       |                            |          |
+    |       v                            |          |
+    |  +---------+                  +----+----+      |
+    |  | ENCODER |---------------> | DECODER |      |
+    |  |   xN    |  (cross-attn)   |   xN    |      |
+    |  +---------+                  +---------+      |
+    |                                                 |
+    +-------------------------------------------------+
+    
+
+============================================================
+
+
+Encoder Block (xN layers)
+===========================================================
+
+    Input
+      |
+      v
+    +-----------------------------------+
+    |     Multi-Head Self-Attention     |
+    +-------------------+---------------+
+                        |
+    -----------------Add & Norm----------  ◄-- Residual connection
+                        |
+    +-------------------+---------------+
+    |        Feed-Forward Network       |
+    |     (Linear -> ReLU -> Linear)      |
+    +-------------------+---------------+
+                        |
+    -----------------Add & Norm----------  ◄-- Residual connection
+                        |
+                        v
+                     Output
+
+Residual connections: output = LayerNorm(x + Sublayer(x))
+    - Helps gradient flow (like ResNet)
+    - Allows stacking many layers
+    
+
+============================================================
+
+
+Decoder Block (xN layers)
+===========================================================
+
+    Input (shifted right)
+      |
+      v
+    +-----------------------------------+
+    |   MASKED Multi-Head Self-Attn     |  ◄-- Can't see future!
+    +-------------------+---------------+
+                        |
+    -----------------Add & Norm----------
+                        |
+    +-------------------+---------------+
+    |    Cross-Attention (Q from        |
+    |    decoder, K,V from encoder)     |  ◄-- Attend to encoder
+    +-------------------+---------------+
+                        |
+    -----------------Add & Norm----------
+                        |
+    +-------------------+---------------+
+    |        Feed-Forward Network       |
+    +-------------------+---------------+
+                        |
+    -----------------Add & Norm----------
+                        |
+                        v
+                     Output
+    
+
+============================================================
+
+
+
+----------------------------------------------------------------------
+
+Error capturing week_07_visualizer.visualize_causal_masking: module 'week_07_visualizer' has no attribute 'visualize_causal_masking'
+
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+            VISUALIZATION 6: Positional Encoding            
+============================================================
+
+
+The Position Problem
+===========================================================
+
+Self-attention is PERMUTATION INVARIANT!
+
+    Attention("cat sat the") = Attention("the cat sat")
+
+    The order of inputs doesn't matter to pure attention.
+    But order matters for language!
+
+Solution: Add position information to embeddings.
+
+    Final embedding = token embedding + position encoding
+    
+
+============================================================
+
+
+Sinusoidal Positional Encoding
+===========================================================
+
+    PE(pos, 2i)   = sin(pos / 10000^(2i/d))
+    PE(pos, 2i+1) = cos(pos / 10000^(2i/d))
+
+    Position 0:  [sin(0), cos(0), sin(0), cos(0), ...]
+                 [  0   ,   1   ,   0   ,   1   , ...]
+
+    Position 1:  [sin(1/1), cos(1/1), sin(1/10), cos(1/10), ...]
+                 [ 0.84  ,  0.54  ,   0.10   ,   0.99   , ...]
+
+    Visualization (for d=8):
+
+    pos | dim0  dim1  dim2  dim3  dim4  dim5  dim6  dim7
+    ----+------------------------------------------------
+     0  | ....  ####  ....  ####  ....  ####  ....  ####
+     1  | ####  ====  .==.  ####  ...=  ####  ....  ####
+     2  | ####  ....  .===  ###=  ...=  ####  ....  ####
+     3  | .===  ....  .===  ###.  ...=  ####  ....  ####
+     4  | ....  ====  ..==  ##==  ...=  ####  ....  ####
+
+    Different frequencies for different dimensions!
+    Low dims: fast oscillation (nearby positions differ)
+    High dims: slow oscillation (captures long-range)
+    
+
+============================================================
+
+
+Why Sinusoidal Works
+===========================================================
+
+Property: PE(pos+k) can be expressed as linear function of PE(pos)
+
+    This allows the model to easily learn RELATIVE positions!
+
+    PE(pos+k) = f(PE(pos))  (learnable linear relationship)
+
+Modern alternatives:
+
+    1. Learned positional embeddings
+       - Just learn a vector for each position
+       - Works well, less inductive bias
+
+    2. Rotary Position Embeddings (RoPE)
+       - Encode position in rotation angle
+       - Better for long sequences
+       - Used in LLaMA, GPT-NeoX
+
+    3. ALiBi (Attention with Linear Biases)
+       - Add position-based bias to attention scores
+       - No extra parameters
+    
+
+============================================================
+
+
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+        VISUALIZATION 7: KV Cache for Fast Inference        
+============================================================
+
+
+The Inference Problem
+===========================================================
+
+Autoregressive generation:
+    Token 1 -> Token 2 -> Token 3 -> Token 4 -> ...
+
+At each step, we recompute attention over ALL previous tokens.
+
+    Step 1: Compute Q,K,V for "The"
+    Step 2: Compute Q,K,V for "The cat"
+    Step 3: Compute Q,K,V for "The cat sat"
+    ...
+
+    We're recomputing K,V for "The" every single step!
+    This is O(n²) redundant work!
+    
+
+============================================================
+
+
+KV Cache Solution
+===========================================================
+
+CACHE the K and V values from previous steps!
+
+    Step 1: Compute K_1, V_1 for "The"
+            Cache: K=[K_1], V=[V_1]
+
+    Step 2: Compute K_2, V_2 for "cat" ONLY
+            Cache: K=[K_1,K_2], V=[V_1,V_2]
+            Compute attention using cached K,V
+
+    Step 3: Compute K_3, V_3 for "sat" ONLY
+            Cache: K=[K_1,K_2,K_3], V=[V_1,V_2,V_3]
+            Compute attention using cached K,V
+
+    +----------------------------------------------------+
+    |  Without cache: O(n²) operations per sequence     |
+    |  With cache:    O(n) operations per sequence      |
+    |                                                    |
+    |  For a 1000-token sequence: 1000x faster!         |
+    +----------------------------------------------------+
+    
+
+============================================================
+
+
+======================================================================
+
+============================================================
+            VISUALIZATION 7: KV Cache Animation             
+============================================================
+
+
+======================================================================
+
+============================================================
+                     KV CACHE ANIMATION                     
+============================================================
+
+Step 1: Processing 'The'
+
+    KV Cache:
+    +----------------------------------------+
+    | K_1, V_1 (The)          > computing |
+    +----------------------------------------+
+
+    Attention computation:
+    Q_1 (new) x [K_1...K_1] (cached) = weights
+    weights x [V_1...V_1] (cached) = output
+
+
+======================================================================
+
+============================================================
+                     KV CACHE ANIMATION                     
+============================================================
+
+Step 2: Processing 'cat'
+
+    KV Cache:
+    +----------------------------------------+
+    | K_1, V_1 (The)             # cached |
+    | K_2, V_2 (cat)          > computing |
+    +----------------------------------------+
+
+    Attention computation:
+    Q_2 (new) x [K_1...K_2] (cached) = weights
+    weights x [V_1...V_2] (cached) = output
+
+    Saved computation: 1 K,V pairs reused!
+
+======================================================================
+
+============================================================
+                     KV CACHE ANIMATION                     
+============================================================
+
+Step 3: Processing 'sat'
+
+    KV Cache:
+    +----------------------------------------+
+    | K_1, V_1 (The)             # cached |
+    | K_2, V_2 (cat)             # cached |
+    | K_3, V_3 (sat)          > computing |
+    +----------------------------------------+
+
+    Attention computation:
+    Q_3 (new) x [K_1...K_3] (cached) = weights
+    weights x [V_1...V_3] (cached) = output
+
+    Saved computation: 2 K,V pairs reused!
+
+======================================================================
+
+============================================================
+                     KV CACHE ANIMATION                     
+============================================================
+
+Step 4: Processing 'on'
+
+    KV Cache:
+    +----------------------------------------+
+    | K_1, V_1 (The)             # cached |
+    | K_2, V_2 (cat)             # cached |
+    | K_3, V_3 (sat)             # cached |
+    | K_4, V_4 (on)          > computing |
+    +----------------------------------------+
+
+    Attention computation:
+    Q_4 (new) x [K_1...K_4] (cached) = weights
+    weights x [V_1...V_4] (cached) = output
+
+    Saved computation: 3 K,V pairs reused!
+
+============================================================
+
+
+
+----------------------------------------------------------------------

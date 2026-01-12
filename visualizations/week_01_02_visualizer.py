@@ -44,11 +44,11 @@ Step 1: INPUTS (x1, x2, x3)
 
 These are the features or data coming into the neuron.
 
-        x1 = 0.5   ──┐
-                     │
-        x2 = 0.8   ──┼──▶ [NEURON]
-                     │
-        x3 = 0.2   ──┘
+        x1 = 0.5   --+
+                     |
+        x2 = 0.8   --+--> [NEURON]
+                     |
+        x3 = 0.2   --+
     """)
     pause()
 
@@ -58,17 +58,17 @@ Step 2: WEIGHTS (w1, w2, w3)
 
 Each connection has a weight - how important is this input?
 
-        x1 = 0.5  ──(w1=0.4)──┐
-                               │
-        x2 = 0.8  ──(w2=0.6)──┼──▶ [NEURON]
-                               │
-        x3 = 0.2  ──(w3=0.2)──┘
+        x1 = 0.5  --(w1=0.4)--+
+                               |
+        x2 = 0.8  --(w2=0.6)--+--> [NEURON]
+                               |
+        x3 = 0.2  --(w3=0.2)--+
 
 Calculation:
   0.5 * 0.4 = 0.20
   0.8 * 0.6 = 0.48
   0.2 * 0.2 = 0.04
-             ─────
+             -----
   Sum       = 0.72
     """)
     pause()
@@ -81,47 +81,47 @@ Bias shifts the activation threshold.
 
         Weighted Sum = 0.72
         Bias         = 0.1
-                      ─────
+                      -----
         Total        = 0.82
 
-        ┌──────────────────────────────────────┐
-        │  x1──(w1)──┐                         │
-        │            ├─→ Σ ──(+b)──→ σ ──→ y  │
-        │  x2──(w2)──┤                         │
-        │            │                         │
-        │  x3──(w3)──┘                         │
-        └──────────────────────────────────────┘
+        +--------------------------------------+
+        |  x1--(w1)--+                         |
+        |            +--> SUM --(+b)---> s ---> y  |
+        |  x2--(w2)--+                         |
+        |            |                         |
+        |  x3--(w3)--+                         |
+        +--------------------------------------+
     """)
     pause()
 
     print("""
-Step 4: ACTIVATION FUNCTION (σ)
+Step 4: ACTIVATION FUNCTION (s)
 =========================================
 
 Non-linear function that determines output.
 
 Common activations:
 
-    Sigmoid:  σ(x) = 1 / (1 + e^(-x))
+    Sigmoid:  s(x) = 1 / (1 + e^(-x))
 
-         1 │      ┌───────────
-           │     ╱
-       0.5│────╱────────────
-           │  ╱
-         0 │──────────────────
+         1 |      +-----------
+           |     /
+       0.5|----/------------
+           |  /
+         0 |------------------
            -4   0   4
 
     ReLU:    f(x) = max(0, x)
 
-           │       ╱
-           │      ╱
-         0 │─────╱
-           │
-           └──────────────────
+           |       /
+           |      /
+         0 |-----/
+           |
+           +------------------
               0
 
 For our neuron:
-  σ(0.82) = 1 / (1 + e^(-0.82)) = 0.69
+  s(0.82) = 1 / (1 + e^(-0.82)) = 0.69
 
 OUTPUT: 0.69
     """)
@@ -137,14 +137,14 @@ def visualize_forward_pass():
     print("""
 A neural network is layers of neurons connected together.
 
-Network Architecture: 2 inputs → 3 hidden → 2 outputs
+Network Architecture: 2 inputs -> 3 hidden -> 2 outputs
 
     INPUT       HIDDEN         OUTPUT
     LAYER       LAYER          LAYER
 
-     x1 ────┬────○─────┬────── y1
-            │    ○     │
-     x2 ────┴────○─────┴────── y2
+     x1 ----+----o-----+------ y1
+            |    o     |
+     x2 ----+----o-----+------ y2
 
      [2]        [3]          [2]
     """)
@@ -153,44 +153,44 @@ Network Architecture: 2 inputs → 3 hidden → 2 outputs
     frames = [
         """
 FORWARD PASS: Step 1 - Data enters input layer
-══════════════════════════════════════════════════════════
+==========================================================
 
      INPUT       HIDDEN         OUTPUT
      LAYER       LAYER          LAYER
 
-    [0.5]───┬────○─────┬────── ?
-            │    ○     │
-    [0.8]───┴────○─────┴────── ?
+    [0.5]---+----o-----+------ ?
+            |    o     |
+    [0.8]---+----o-----+------ ?
 
-    ▲▲▲▲
+    ^^^^
     Data enters here
         """,
         """
 FORWARD PASS: Step 2 - Compute hidden layer activations
-══════════════════════════════════════════════════════════
+==========================================================
 
      INPUT       HIDDEN         OUTPUT
      LAYER       LAYER          LAYER
 
-    [0.5]═══╦═══[0.62]═══╦════ ?
-            ║   [0.71]   ║
-    [0.8]═══╩═══[0.45]═══╩════ ?
+    [0.5]===+===[0.62]===+==== ?
+            |   [0.71]   |
+    [0.8]===+===[0.45]===+==== ?
 
-            ▲▲▲▲▲▲▲▲▲
-            σ(Wx + b) computed
+            ^^^^^^^^^
+            s(Wx + b) computed
         """,
         """
 FORWARD PASS: Step 3 - Compute output layer
-══════════════════════════════════════════════════════════
+==========================================================
 
      INPUT       HIDDEN         OUTPUT
      LAYER       LAYER          LAYER
 
-    [0.5]═══╦═══[0.62]═══╦════[0.73]
-            ║   [0.71]   ║
-    [0.8]═══╩═══[0.45]═══╩════[0.28]
+    [0.5]===+===[0.62]===+====[0.73]
+            |   [0.71]   |
+    [0.8]===+===[0.45]===+====[0.28]
 
-                         ▲▲▲▲▲▲▲▲
+                         ^^^^^^^^
                          Final output!
         """
     ]
@@ -218,15 +218,15 @@ Gradient Descent: Finding the minimum of the loss function.
 Imagine a ball rolling down a hill to find the lowest point.
 
                     Loss
-                      │
-                  ○   │      ← Start here (high loss)
-                   ╲  │
-                    ╲ │
-                     ╲│
-                      ╲
-                       ╲
-                        ●    ← Goal: minimum loss
-                      ──┴────────────────
+                      |
+                  o   |      <- Start here (high loss)
+                   \  |
+                    \ |
+                     \|
+                      \
+                       \
+                        *    <- Goal: minimum loss
+                      --+----------------
                               weights
     """)
     pause()
@@ -252,11 +252,11 @@ Imagine a ball rolling down a hill to find the lowest point.
 
         # Draw loss landscape
         print("\n    Loss")
-        print("      │")
+        print("      |")
 
         height = 10
         for h in range(height, 0, -1):
-            line = "      │"
+            line = "      |"
             # Draw the curve
             for x in range(40):
                 # Parabola shape: loss = (x-20)^2 / 40
@@ -270,11 +270,11 @@ Imagine a ball rolling down a hill to find the lowest point.
             ball_x = int(step * 5 + 5)
             ball_h = ((ball_x - 20) ** 2) / 40
             if abs(ball_h - h) < 0.5 and ball_x < 35:
-                line = line[:7 + ball_x] + "○" + line[8 + ball_x:]
+                line = line[:7 + ball_x] + "o" + line[8 + ball_x:]
 
             print(line)
 
-        print("      └" + "─" * 40 + "→ weights")
+        print("      +" + "-" * 40 + "-> weights")
         print(f"\n    Step: {step}  |  Loss: {loss:.2f}")
         print(f"    {msg}")
 
@@ -285,21 +285,21 @@ Imagine a ball rolling down a hill to find the lowest point.
     print("""
 KEY CONCEPTS:
 
-1. LEARNING RATE (α):
+1. LEARNING RATE (a):
    - Too small: slow convergence
    - Too large: overshooting
 
-   weights_new = weights_old - α * gradient
+   weights_new = weights_old - a * gradient
 
-                Small α           Large α
-              ○→○→○→○→●         ○──────○
-                                      ╲╱
-                                       ○ (oscillating)
+                Small a           Large a
+              o->o->o->o->*         o------o
+                                      \/
+                                       o (oscillating)
 
 2. THE GRADIENT:
    - Direction of steepest increase
    - We go OPPOSITE direction (descent)
-   - ∂Loss/∂weight tells us how to adjust
+   - dLoss/dweight tells us how to adjust
 
 3. STOCHASTIC vs BATCH:
    - Batch: use all data (smooth but slow)
@@ -321,69 +321,69 @@ Backpropagation: Computing gradients layer by layer.
 The chain rule allows us to compute how each weight
 affects the final loss.
 
-    ∂Loss   ∂Loss   ∂output   ∂hidden
-    ───── = ───── × ─────── × ────────
-    ∂w1     ∂output ∂hidden   ∂w1
+    dLoss   dLoss   doutput   dhidden
+    ----- = ----- x ------- x --------
+    dw1     doutput dhidden   dw1
     """)
     pause()
 
     frames = [
         """
 BACKPROP Step 1: Compute output error
-══════════════════════════════════════════════════════════
+==========================================================
 
      INPUT       HIDDEN         OUTPUT        TARGET
 
-    [0.5]───┬────[h1]────┬────[0.73]   vs   [1.0]
-            │    [h2]    │
-    [0.8]───┴────[h3]────┴────[0.28]   vs   [0.0]
+    [0.5]---+----[h1]----+----[0.73]   vs   [1.0]
+            |    [h2]    |
+    [0.8]---+----[h3]----+----[0.28]   vs   [0.0]
 
-                                  ◄═══════════
+                                  ◄===========
                                   Error = Target - Output
                                   e1 = 1.0 - 0.73 = 0.27
                                   e2 = 0.0 - 0.28 = -0.28
         """,
         """
 BACKPROP Step 2: Propagate error to hidden layer
-══════════════════════════════════════════════════════════
+==========================================================
 
      INPUT       HIDDEN         OUTPUT        TARGET
 
-    [0.5]───┬────[h1]◄═══┬════[0.73]   vs   [1.0]
-            │    [h2]◄═══│
-    [0.8]───┴────[h3]◄═══┴════[0.28]   vs   [0.0]
+    [0.5]---+----[h1]◄===+====[0.73]   vs   [1.0]
+            |    [h2]◄===|
+    [0.8]---+----[h3]◄===+====[0.28]   vs   [0.0]
 
-                 ◄═══════════════════
-                 δ_hidden = δ_output × W × σ'(z)
+                 ◄===================
+                 δ_hidden = δ_output x W x s'(z)
         """,
         """
 BACKPROP Step 3: Compute weight gradients
-══════════════════════════════════════════════════════════
+==========================================================
 
      INPUT       HIDDEN         OUTPUT        TARGET
 
-    [0.5]◄══╦════[h1]◄═══╦════[0.73]   vs   [1.0]
-            ║    [h2]◄═══║
-    [0.8]◄══╩════[h3]◄═══╩════[0.28]   vs   [0.0]
+    [0.5]◄==+====[h1]◄===+====[0.73]   vs   [1.0]
+            |    [h2]◄===|
+    [0.8]◄==+====[h3]◄===+====[0.28]   vs   [0.0]
 
-    ◄════════════════════════════════
-    ∂L/∂W = δ × input
+    ◄================================
+    dL/dW = δ x input
     Now we know how to update ALL weights!
         """,
         """
 BACKPROP Step 4: Update weights
-══════════════════════════════════════════════════════════
+==========================================================
 
      INPUT       HIDDEN         OUTPUT
 
-    [0.5]═══╦════[h1]════╦════ UPDATED
-            ║    [h2]    ║     WEIGHTS!
-    [0.8]═══╩════[h3]════╩════
+    [0.5]===+====[h1]====+==== UPDATED
+            |    [h2]    |     WEIGHTS!
+    [0.8]===+====[h3]====+====
 
-    W_new = W_old - learning_rate × gradient
+    W_new = W_old - learning_rate x gradient
 
-    ✓ All weights adjusted to reduce loss
-    ✓ Repeat for next batch of data
+    [OK] All weights adjusted to reduce loss
+    [OK] Repeat for next batch of data
         """
     ]
 
@@ -412,26 +412,26 @@ Without them, neural networks are just linear transformations!
     Layer1: y = W1*x + b1
     Layer2: y = W2*(W1*x + b1) + b2
           = W2*W1*x + W2*b1 + b2
-          = W'*x + b'  ← Still linear!
+          = W'*x + b'  <- Still linear!
 
 Activation functions add non-linearity.
     """)
     pause()
 
     print("""
-SIGMOID: σ(x) = 1 / (1 + e^(-x))
-═══════════════════════════════════════════════════════════
+SIGMOID: s(x) = 1 / (1 + e^(-x))
+===========================================================
 
 Range: (0, 1)  |  Good for: probability outputs
 
-    1.0 │                    ╭───────────
-        │                  ╱
-        │                ╱
-    0.5 │──────────────╱────────────────
-        │            ╱
-        │          ╱
-    0.0 │─────────╯
-        └────────────────────────────────
+    1.0 |                    +-----------
+        |                  /
+        |                /
+    0.5 |--------------/----------------
+        |            /
+        |          /
+    0.0 |---------+
+        +--------------------------------
           -6    -4    -2    0    2    4    6
 
 Problems:
@@ -443,61 +443,61 @@ Problems:
 
     print("""
 TANH: tanh(x) = (e^x - e^(-x)) / (e^x + e^(-x))
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Range: (-1, 1)  |  Good for: centered outputs
 
-    1.0 │                    ╭───────────
-        │                  ╱
-    0.0 │────────────────╱──────────────
-        │              ╱
-        │            ╱
-   -1.0 │───────────╯
-        └────────────────────────────────
+    1.0 |                    +-----------
+        |                  /
+    0.0 |----------------/--------------
+        |              /
+        |            /
+   -1.0 |-----------+
+        +--------------------------------
           -6    -4    -2    0    2    4    6
 
 Better than sigmoid:
-  ✓ Zero-centered
-  ✗ Still has vanishing gradient problem
+  [OK] Zero-centered
+  [X] Still has vanishing gradient problem
     """)
     pause()
 
     print("""
 ReLU: f(x) = max(0, x)
-═══════════════════════════════════════════════════════════
+===========================================================
 
-Range: [0, ∞)  |  Good for: hidden layers (most popular!)
+Range: [0, inf)  |  Good for: hidden layers (most popular!)
 
-        │                    ╱
-        │                  ╱
-        │                ╱
-        │              ╱
-    0   │────────────╱
-        │
-        └────────────────────────────────
+        |                    /
+        |                  /
+        |                /
+        |              /
+    0   |------------/
+        |
+        +--------------------------------
           -4    -2    0    2    4    6
 
 Advantages:
-  ✓ No vanishing gradient for positive values
-  ✓ Computationally cheap
-  ✓ Sparse activation (biological plausibility)
+  [OK] No vanishing gradient for positive values
+  [OK] Computationally cheap
+  [OK] Sparse activation (biological plausibility)
 
 Problems:
-  ✗ "Dead ReLU" - neurons can get stuck at 0
+  [X] "Dead ReLU" - neurons can get stuck at 0
     """)
     pause()
 
     print("""
 COMPARISON TABLE
-═══════════════════════════════════════════════════════════
+===========================================================
 
-Function   │ Range     │ Centered │ Gradient │ Speed
-───────────┼───────────┼──────────┼──────────┼────────
-Sigmoid    │ (0, 1)    │ No       │ Vanishes │ Slow
-Tanh       │ (-1, 1)   │ Yes      │ Vanishes │ Slow
-ReLU       │ [0, ∞)    │ No       │ OK*      │ Fast
-LeakyReLU  │ (-∞, ∞)   │ No       │ Good     │ Fast
-GELU       │ (-0.17,∞) │ ~Yes     │ Good     │ Medium
+Function   | Range     | Centered | Gradient | Speed
+-----------+-----------+----------+----------+--------
+Sigmoid    | (0, 1)    | No       | Vanishes | Slow
+Tanh       | (-1, 1)   | Yes      | Vanishes | Slow
+ReLU       | [0, inf)    | No       | OK*      | Fast
+LeakyReLU  | (-inf, inf)   | No       | Good     | Fast
+GELU       | (-0.17,inf) | ~Yes     | Good     | Medium
 
 *ReLU gradient = 0 for negative inputs (dead neurons)
 
@@ -520,18 +520,18 @@ def visualize_loss_functions():
 Loss functions measure how wrong our predictions are.
 
 REGRESSION: Mean Squared Error (MSE)
-═══════════════════════════════════════════════════════════
+===========================================================
 
-    MSE = (1/n) Σ (y_true - y_pred)²
+    MSE = (1/n) SUM (y_true - y_pred)²
 
     Example:
-    ┌──────────┬──────────┬─────────────┬────────────┐
-    │ y_true   │ y_pred   │ Error       │ Error²     │
-    ├──────────┼──────────┼─────────────┼────────────┤
-    │ 3.0      │ 2.5      │ 0.5         │ 0.25       │
-    │ 5.0      │ 4.8      │ 0.2         │ 0.04       │
-    │ 2.0      │ 2.3      │ -0.3        │ 0.09       │
-    └──────────┴──────────┴─────────────┴────────────┘
+    +----------+----------+-------------+------------+
+    | y_true   | y_pred   | Error       | Error²     |
+    +----------+----------+-------------+------------+
+    | 3.0      | 2.5      | 0.5         | 0.25       |
+    | 5.0      | 4.8      | 0.2         | 0.04       |
+    | 2.0      | 2.3      | -0.3        | 0.09       |
+    +----------+----------+-------------+------------+
                                     MSE = 0.38/3 = 0.127
 
     Why squared?
@@ -543,7 +543,7 @@ REGRESSION: Mean Squared Error (MSE)
 
     print("""
 CLASSIFICATION: Cross-Entropy Loss
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Binary Cross-Entropy:
     L = -[y*log(p) + (1-y)*log(1-p)]
@@ -551,21 +551,21 @@ Binary Cross-Entropy:
     where y = true label (0 or 1)
           p = predicted probability
 
-    ┌────────────────────────────────────────────────┐
-    │  True: 1  │  If p = 0.9  │  L = -log(0.9) = 0.1│
-    │  True: 1  │  If p = 0.1  │  L = -log(0.1) = 2.3│ ← Bad!
-    │  True: 0  │  If p = 0.1  │  L = -log(0.9) = 0.1│
-    └────────────────────────────────────────────────┘
+    +------------------------------------------------+
+    |  True: 1  |  If p = 0.9  |  L = -log(0.9) = 0.1|
+    |  True: 1  |  If p = 0.1  |  L = -log(0.1) = 2.3| <- Bad!
+    |  True: 0  |  If p = 0.1  |  L = -log(0.9) = 0.1|
+    +------------------------------------------------+
 
     Loss explodes when confident AND wrong!
 
-    Loss │
-         │╲
-         │ ╲
-         │  ╲
-         │   ╲____
-       0 │        ────────────
-         └────────────────────
+    Loss |
+         |\
+         | \
+         |  \
+         |   \____
+       0 |        ------------
+         +--------------------
            0    0.5    1.0
                 Correct class probability
     """)
@@ -573,9 +573,9 @@ Binary Cross-Entropy:
 
     print("""
 MULTI-CLASS: Categorical Cross-Entropy
-═══════════════════════════════════════════════════════════
+===========================================================
 
-    L = -Σ y_i * log(p_i)   for all classes
+    L = -SUM y_i * log(p_i)   for all classes
 
     Example: 3-class classification (cat, dog, bird)
 
@@ -588,11 +588,11 @@ MULTI-CLASS: Categorical Cross-Entropy
 
     Only the TRUE class matters in the sum!
 
-    ┌─────────────────────────────────────────────────┐
-    │  Good prediction (cat=0.9):    L = 0.11        │
-    │  Bad prediction (cat=0.3):     L = 1.20        │
-    │  Terrible prediction (cat=0.01): L = 4.61      │
-    └─────────────────────────────────────────────────┘
+    +-------------------------------------------------+
+    |  Good prediction (cat=0.9):    L = 0.11        |
+    |  Bad prediction (cat=0.3):     L = 1.20        |
+    |  Terrible prediction (cat=0.01): L = 4.61      |
+    +-------------------------------------------------+
     """)
     pause()
 

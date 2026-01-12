@@ -31,28 +31,28 @@ def visualize_tokenization():
 
     print("""
 Why Tokenization?
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Neural networks need NUMBERS, not text!
 
-    "Hello, world!" → [15496, 11, 995, 0]
+    "Hello, world!" -> [15496, 11, 995, 0]
 
 Three approaches:
 
     CHARACTER-LEVEL:
-    "Hello" → ['H','e','l','l','o'] → [72,101,108,108,111]
-    ✗ Very long sequences
-    ✗ Hard to learn meaning
+    "Hello" -> ['H','e','l','l','o'] -> [72,101,108,108,111]
+    [X] Very long sequences
+    [X] Hard to learn meaning
 
     WORD-LEVEL:
-    "Hello world" → ['Hello', 'world'] → [1234, 5678]
-    ✗ Huge vocabulary (100K+ words)
-    ✗ Can't handle new words → [UNK]
+    "Hello world" -> ['Hello', 'world'] -> [1234, 5678]
+    [X] Huge vocabulary (100K+ words)
+    [X] Can't handle new words -> [UNK]
 
-    SUBWORD (BPE):  ← Best of both worlds!
-    "unhappiness" → ['un', 'happiness'] → [592, 8234]
-    ✓ Reasonable vocabulary (~50K)
-    ✓ Can handle any word
+    SUBWORD (BPE):  <- Best of both worlds!
+    "unhappiness" -> ['un', 'happiness'] -> [592, 8234]
+    [OK] Reasonable vocabulary (~50K)
+    [OK] Can handle any word
     """)
     pause()
 
@@ -64,19 +64,19 @@ Three approaches:
     steps = [
         ("Initial (character level)",
          "l o w | l o w e r | l o w e s t | n e w | n e w e r"),
-        ("Merge 'e' + 'r' → 'er'",
+        ("Merge 'e' + 'r' -> 'er'",
          "l o w | l o w er | l o w e s t | n e w | n e w er"),
-        ("Merge 'e' + 's' → 'es'",
+        ("Merge 'e' + 's' -> 'es'",
          "l o w | l o w er | l o w es t | n e w | n e w er"),
-        ("Merge 'es' + 't' → 'est'",
+        ("Merge 'es' + 't' -> 'est'",
          "l o w | l o w er | l o w est | n e w | n e w er"),
-        ("Merge 'l' + 'o' → 'lo'",
+        ("Merge 'l' + 'o' -> 'lo'",
          "lo w | lo w er | lo w est | n e w | n e w er"),
-        ("Merge 'lo' + 'w' → 'low'",
+        ("Merge 'lo' + 'w' -> 'low'",
          "low | low er | low est | n e w | n e w er"),
-        ("Merge 'n' + 'e' → 'ne'",
+        ("Merge 'n' + 'e' -> 'ne'",
          "low | low er | low est | ne w | ne w er"),
-        ("Merge 'ne' + 'w' → 'new'",
+        ("Merge 'ne' + 'w' -> 'new'",
          "low | low er | low est | new | new er"),
     ]
 
@@ -102,10 +102,10 @@ Three approaches:
 Final vocabulary: ['low', 'er', 'est', 'new', ...]
 
 Now tokenizing new words:
-    "lowest"  → ['low', 'est']     ✓
-    "newest"  → ['new', 'est']     ✓
-    "lower"   → ['low', 'er']      ✓
-    "newish"  → ['new', 'ish']     ✓ (handles unseen!)
+    "lowest"  -> ['low', 'est']     [OK]
+    "newest"  -> ['new', 'est']     [OK]
+    "lower"   -> ['low', 'er']      [OK]
+    "newish"  -> ['new', 'ish']     [OK] (handles unseen!)
     """)
     pause()
 
@@ -118,7 +118,7 @@ def visualize_pretraining():
 
     print("""
 The Core Task: Predict the Next Token
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Training data: Massive text corpus (books, web, code, etc.)
 
@@ -153,7 +153,7 @@ Training data: Massive text corpus (books, web, code, etc.)
         print(f"\nInput: \"{current}\"")
         print()
         print("    Probability distribution over vocabulary:")
-        print("    ┌" + "─" * 40 + "┐")
+        print("    +" + "-" * 40 + "+")
 
         # Show top predictions
         if next_token == "jumps":
@@ -168,12 +168,12 @@ Training data: Massive text corpus (books, web, code, etc.)
             probs = [("dog", 0.55), ("cat", 0.15), ("hound", 0.10), ("fox", 0.05)]
 
         for token, prob in probs:
-            bar = "█" * int(prob * 30)
-            marker = " ← CORRECT" if token == next_token else ""
-            print(f"    │ {token:>10}: {bar} {prob:.2f}{marker}")
+            bar = "#" * int(prob * 30)
+            marker = " <- CORRECT" if token == next_token else ""
+            print(f"    | {token:>10}: {bar} {prob:.2f}{marker}")
 
-        print("    │      ...")
-        print("    └" + "─" * 40 + "┘")
+        print("    |      ...")
+        print("    +" + "-" * 40 + "+")
         print(f"\n    Selected: \"{next_token}\"")
 
         time.sleep(1.5)
@@ -190,87 +190,87 @@ def visualize_scaling():
 
     print("""
 The Key Discovery: Performance Scales Predictably
-═══════════════════════════════════════════════════════════
+===========================================================
 
-    Loss ≈ C / N^0.076 + C / D^0.095
+    Loss ~= C / N^0.076 + C / D^0.095
 
     N = Number of parameters
     D = Dataset size (tokens)
 
-    ┌─────────────────────────────────────────────────────┐
-    │  Loss                                               │
-    │   │                                                 │
-    │ 4 │●                                               │
-    │   │ ●                                              │
-    │ 3 │   ●                                            │
-    │   │     ●●                                         │
-    │ 2 │        ●●●                                     │
-    │   │            ●●●●●                               │
-    │ 1 │                  ●●●●●●●●●●●●●●●               │
-    │   └───────────────────────────────────────────────  │
-    │     1B      10B      100B     1T      Parameters    │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |  Loss                                               |
+    |   |                                                 |
+    | 4 |*                                               |
+    |   | *                                              |
+    | 3 |   *                                            |
+    |   |     **                                         |
+    | 2 |        ***                                     |
+    |   |            *****                               |
+    | 1 |                  ***************               |
+    |   +-----------------------------------------------  |
+    |     1B      10B      100B     1T      Parameters    |
+    +-----------------------------------------------------+
 
-    Each 10x increase in compute → predictable loss decrease
+    Each 10x increase in compute -> predictable loss decrease
     """)
     pause()
 
     print("""
 Chinchilla Scaling Laws (2022)
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Key finding: Most models were UNDERTRAINED!
 
     GPT-3:      175B params, 300B tokens
-    Chinchilla:  70B params, 1.4T tokens  ← Same compute, better!
+    Chinchilla:  70B params, 1.4T tokens  <- Same compute, better!
 
     Optimal ratio: ~20 tokens per parameter
 
-    ┌─────────────────────────────────────────────────────┐
-    │                                                     │
-    │  Before Chinchilla:    After Chinchilla:            │
-    │                                                     │
-    │  "Make the model      "Balance model size           │
-    │   bigger!"             and data!"                   │
-    │                                                     │
-    │  ┌───────────┐        ┌─────┐                       │
-    │  │  HUGE     │        │     │ + lots of data        │
-    │  │  MODEL    │   →    │model│ ████████████          │
-    │  │           │        │     │ ████████████          │
-    │  └───────────┘        └─────┘                       │
-    │   few data                                          │
-    │                                                     │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |                                                     |
+    |  Before Chinchilla:    After Chinchilla:            |
+    |                                                     |
+    |  "Make the model      "Balance model size           |
+    |   bigger!"             and data!"                   |
+    |                                                     |
+    |  +-----------+        +-----+                       |
+    |  |  HUGE     |        |     | + lots of data        |
+    |  |  MODEL    |   ->    |model| ############          |
+    |  |           |        |     | ############          |
+    |  +-----------+        +-----+                       |
+    |   few data                                          |
+    |                                                     |
+    +-----------------------------------------------------+
     """)
     pause()
 
     print("""
 Emergent Capabilities
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Some abilities appear SUDDENLY at certain scales:
 
-    Capability      │ Appears at
-    ────────────────┼─────────────
-    Basic grammar   │    ~1B
-    Coherent text   │    ~7B
-    Basic math      │   ~13B
-    Chain-of-thought│   ~60B
-    Complex reasoning│  ~175B+
+    Capability      | Appears at
+    ----------------+-------------
+    Basic grammar   |    ~1B
+    Coherent text   |    ~7B
+    Basic math      |   ~13B
+    Chain-of-thought|   ~60B
+    Complex reasoning|  ~175B+
 
-    ┌─────────────────────────────────────────────────────┐
-    │  Accuracy                                           │
-    │     │                         ┌─────────────────    │
-    │ 100%│                         │                     │
-    │     │                        ╱                      │
-    │  50%│                       ╱                       │
-    │     │                      ╱                        │
-    │   0%│──────────────────────╯                        │
-    │     └───────────────────────────────────────────    │
-    │       1B    10B    100B  Parameters                 │
-    │                                                     │
-    │  Not gradual improvement - sudden jumps!            │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |  Accuracy                                           |
+    |     |                         +-----------------    |
+    | 100%|                         |                     |
+    |     |                        /                      |
+    |  50%|                       /                       |
+    |     |                      /                        |
+    |   0%|----------------------+                        |
+    |     +-------------------------------------------    |
+    |       1B    10B    100B  Parameters                 |
+    |                                                     |
+    |  Not gradual improvement - sudden jumps!            |
+    +-----------------------------------------------------+
     """)
     pause()
 
@@ -283,62 +283,62 @@ def visualize_lora():
 
     print("""
 The Fine-tuning Problem
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Full fine-tuning:
     - Update ALL parameters
     - 70B model = 280GB memory (fp32)
     - Need multiple high-end GPUs
 
-    ┌───────────────────────────────────────────────────┐
-    │  W: [4096 × 4096] = 16 million parameters        │
-    │                                                   │
-    │  ████████████████████████████████████████████    │
-    │  ████████████████████████████████████████████    │
-    │  ████████████████████████████████████████████    │
-    │  ████████████████████████████████████████████    │
-    │                                                   │
-    │  ALL trainable (expensive!)                       │
-    └───────────────────────────────────────────────────┘
+    +---------------------------------------------------+
+    |  W: [4096 x 4096] = 16 million parameters        |
+    |                                                   |
+    |  ############################################    |
+    |  ############################################    |
+    |  ############################################    |
+    |  ############################################    |
+    |                                                   |
+    |  ALL trainable (expensive!)                       |
+    +---------------------------------------------------+
     """)
     pause()
 
     print("""
 LoRA: Train Only Low-Rank Updates
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Instead of updating W directly, add low-rank matrices A and B:
 
-    W_new = W_frozen + A × B
+    W_new = W_frozen + A x B
 
-    W: [4096 × 4096]  (FROZEN - 16M params)
-    A: [4096 × 16]    (trainable - 65K params)
-    B: [16 × 4096]    (trainable - 65K params)
+    W: [4096 x 4096]  (FROZEN - 16M params)
+    A: [4096 x 16]    (trainable - 65K params)
+    B: [16 x 4096]    (trainable - 65K params)
 
     Total trainable: 130K vs 16M = 0.8%!
 
-    ┌───────────────────────────────────────────────────┐
-    │                                                   │
-    │        ┌───────────────────────────────┐         │
-    │   x ──▶│      W (frozen, 4096×4096)    │──┐      │
-    │        └───────────────────────────────┘  │      │
-    │                                           ├──▶ y │
-    │        ┌──────┐         ┌──────┐          │      │
-    │   x ──▶│ A    │────────▶│ B    │─────────┘      │
-    │        │(4096 │         │(16×  │                 │
-    │        │ ×16) │         │4096) │                 │
-    │        └──────┘         └──────┘                 │
-    │        (trainable)      (trainable)              │
-    │                                                   │
-    └───────────────────────────────────────────────────┘
+    +---------------------------------------------------+
+    |                                                   |
+    |        +-------------------------------+         |
+    |   x -->|      W (frozen, 4096x4096)    |--+      |
+    |        +-------------------------------+  |      |
+    |                                           +--> y |
+    |        +------+         +------+          |      |
+    |   x -->| A    |-------->| B    |---------+      |
+    |        |(4096 |         |(16x  |                 |
+    |        | x16) |         |4096) |                 |
+    |        +------+         +------+                 |
+    |        (trainable)      (trainable)              |
+    |                                                   |
+    +---------------------------------------------------+
 
-    Output = W×x + A×B×x  (frozen + learned adjustment)
+    Output = Wxx + AxBxx  (frozen + learned adjustment)
     """)
     pause()
 
     print("""
 Why Low-Rank Works
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Hypothesis: Task-specific updates have low intrinsic dimension
 
@@ -347,24 +347,24 @@ Hypothesis: Task-specific updates have low intrinsic dimension
 
     This delta (ΔW) is often LOW-RANK!
 
-    ┌─────────────────────────────────────────────────────┐
-    │                                                     │
-    │  Full fine-tuning updates (ΔW):                     │
-    │  ┌───────────────────────────────────┐              │
-    │  │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│  Looks       │
-    │  │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│  random but  │
-    │  │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│  actually... │
-    │  └───────────────────────────────────┘              │
-    │                                                     │
-    │  SVD decomposition shows:                           │
-    │  ┌────┐   ┌────────────────────────────┐           │
-    │  │████│ × │▓▓░░░░░░░░░░░░░░░░░░░░░░░░░│           │
-    │  │████│   └────────────────────────────┘           │
-    │  │    │                                            │
-    │  │    │   Most singular values ≈ 0!                │
-    │  └────┘   Only a few dimensions matter.            │
-    │                                                     │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |                                                     |
+    |  Full fine-tuning updates (ΔW):                     |
+    |  +-----------------------------------+              |
+    |  |..................................|  Looks       |
+    |  |..................................|  random but  |
+    |  |..................................|  actually... |
+    |  +-----------------------------------+              |
+    |                                                     |
+    |  SVD decomposition shows:                           |
+    |  +----+   +----------------------------+           |
+    |  |####| x |##.........................|           |
+    |  |####|   +----------------------------+           |
+    |  |    |                                            |
+    |  |    |   Most singular values ~= 0!                |
+    |  +----+   Only a few dimensions matter.            |
+    |                                                     |
+    +-----------------------------------------------------+
     """)
     pause()
 
@@ -377,7 +377,7 @@ def visualize_rlhf():
 
     print("""
 The Alignment Problem
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Pre-trained LLMs are HELPFUL but not ALIGNED:
 
@@ -397,13 +397,13 @@ RLHF trains models to be helpful, harmless, and honest.
 
     print("""
 RLHF Pipeline: Three Steps
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Step 1: SUPERVISED FINE-TUNING (SFT)
     Train on human-written helpful responses
 
-    [Prompt] → [Good Response written by human]
-    [Prompt] → [Good Response written by human]
+    [Prompt] -> [Good Response written by human]
+    [Prompt] -> [Good Response written by human]
     ...
 
 Step 2: REWARD MODEL TRAINING
@@ -419,27 +419,27 @@ Step 2: REWARD MODEL TRAINING
 Step 3: RL FINE-TUNING (PPO)
     Optimize model to maximize reward
 
-    ┌─────────────────────────────────────────────────────┐
-    │                                                     │
-    │  ┌─────────┐    ┌───────────┐    ┌──────────────┐  │
-    │  │ Prompt  │───▶│   Model   │───▶│   Response   │  │
-    │  └─────────┘    └───────────┘    └──────┬───────┘  │
-    │                       ▲                  │          │
-    │                       │                  ▼          │
-    │                  Update          ┌──────────────┐  │
-    │                       │          │Reward Model  │  │
-    │                       │          │   R(resp)    │  │
-    │                       │          └──────┬───────┘  │
-    │                       └──────────────────┘          │
-    │                         Maximize reward             │
-    │                                                     │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |                                                     |
+    |  +---------+    +-----------+    +--------------+  |
+    |  | Prompt  |--->|   Model   |--->|   Response   |  |
+    |  +---------+    +-----------+    +------+-------+  |
+    |                       ^                  |          |
+    |                       |                  v          |
+    |                  Update          +--------------+  |
+    |                       |          |Reward Model  |  |
+    |                       |          |   R(resp)    |  |
+    |                       |          +------+-------+  |
+    |                       +------------------+          |
+    |                         Maximize reward             |
+    |                                                     |
+    +-----------------------------------------------------+
     """)
     pause()
 
     print("""
 The KL Penalty Trick
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Problem: Model might "hack" the reward!
 
@@ -451,20 +451,20 @@ Problem: Model might "hack" the reward!
 
 Solution: Penalize divergence from original model
 
-    Objective = Reward - β × KL(policy || reference)
-                  ↑                    ↑
+    Objective = Reward - b x KL(policy || reference)
+                  ^                    ^
             Maximize this      Stay close to base model
 
-    ┌─────────────────────────────────────────────────────┐
-    │                                                     │
-    │  The model should:                                  │
-    │    ✓ Generate helpful responses (high reward)       │
-    │    ✓ Sound like the original model (low KL)         │
-    │                                                     │
-    │  This prevents reward hacking while allowing        │
-    │  beneficial changes in behavior.                    │
-    │                                                     │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |                                                     |
+    |  The model should:                                  |
+    |    [OK] Generate helpful responses (high reward)       |
+    |    [OK] Sound like the original model (low KL)         |
+    |                                                     |
+    |  This prevents reward hacking while allowing        |
+    |  beneficial changes in behavior.                    |
+    |                                                     |
+    +-----------------------------------------------------+
     """)
     pause()
 
@@ -477,54 +477,54 @@ def visualize_prompting():
 
     print("""
 Zero-shot vs Few-shot
-═══════════════════════════════════════════════════════════
+===========================================================
 
 ZERO-SHOT: Just ask directly
-    ┌─────────────────────────────────────────────────────┐
-    │ Classify the sentiment: "I love this product!"     │
-    │                                                     │
-    │ → positive                                          │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    | Classify the sentiment: "I love this product!"     |
+    |                                                     |
+    | -> positive                                          |
+    +-----------------------------------------------------+
 
 FEW-SHOT: Provide examples first
-    ┌─────────────────────────────────────────────────────┐
-    │ Classify the sentiment:                             │
-    │                                                     │
-    │ "Great quality!" → positive                         │
-    │ "Terrible waste of money" → negative                │
-    │ "It works fine" → neutral                           │
-    │                                                     │
-    │ "I love this product!" →                            │
-    │                                                     │
-    │ → positive  (much more reliable!)                   │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    | Classify the sentiment:                             |
+    |                                                     |
+    | "Great quality!" -> positive                         |
+    | "Terrible waste of money" -> negative                |
+    | "It works fine" -> neutral                           |
+    |                                                     |
+    | "I love this product!" ->                            |
+    |                                                     |
+    | -> positive  (much more reliable!)                   |
+    +-----------------------------------------------------+
     """)
     pause()
 
     print("""
 Chain-of-Thought (CoT)
-═══════════════════════════════════════════════════════════
+===========================================================
 
 Problem: LLMs often fail at reasoning
 
     Q: "A bat and ball cost $1.10. The bat costs $1 more
         than the ball. How much does the ball cost?"
 
-    Without CoT: "$0.10"  ✗ WRONG!
+    Without CoT: "$0.10"  [X] WRONG!
 
     With CoT:
-    ┌─────────────────────────────────────────────────────┐
-    │ "Let me think step by step.                        │
-    │                                                     │
-    │  Let the ball cost x dollars.                       │
-    │  The bat costs x + $1.                              │
-    │  Total: x + (x + 1) = $1.10                         │
-    │  2x + 1 = 1.10                                      │
-    │  2x = 0.10                                          │
-    │  x = $0.05                                          │
-    │                                                     │
-    │  The ball costs $0.05."  ✓ CORRECT!                │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    | "Let me think step by step.                        |
+    |                                                     |
+    |  Let the ball cost x dollars.                       |
+    |  The bat costs x + $1.                              |
+    |  Total: x + (x + 1) = $1.10                         |
+    |  2x + 1 = 1.10                                      |
+    |  2x = 0.10                                          |
+    |  x = $0.05                                          |
+    |                                                     |
+    |  The ball costs $0.05."  [OK] CORRECT!                |
+    +-----------------------------------------------------+
 
 Magic phrase: "Let's think step by step"
     """)
@@ -532,14 +532,14 @@ Magic phrase: "Let's think step by step"
 
     print("""
 Advanced Prompting Patterns
-═══════════════════════════════════════════════════════════
+===========================================================
 
 SELF-CONSISTENCY: Multiple samples + majority vote
 
     Run same prompt 5 times:
     Response 1: "42"
     Response 2: "42"
-    Response 3: "38"  ← outlier
+    Response 3: "38"  <- outlier
     Response 4: "42"
     Response 5: "42"
 
@@ -549,12 +549,12 @@ TREE OF THOUGHTS: Explore multiple reasoning paths
 
               Problem
              /   |   \\
-           A     B     C      ← Generate options
+           A     B     C      <- Generate options
           /|    |     |\\
-         A1 A2  B1    C1 C2   ← Explore branches
-         ✗  ✓   ✗     ✓  ✗    ← Evaluate
+         A1 A2  B1    C1 C2   <- Explore branches
+         [X]  [OK]   [X]     [OK]  [X]    <- Evaluate
             |         |
-           ...       ...      ← Continue good paths
+           ...       ...      <- Continue good paths
 
 REFLECTION: Ask model to critique then improve
 
@@ -573,38 +573,38 @@ def visualize_rag():
 
     print("""
 The Knowledge Problem
-═══════════════════════════════════════════════════════════
+===========================================================
 
 LLMs have limitations:
-    ✗ Knowledge cutoff (training data date)
-    ✗ Can't access your private documents
-    ✗ May hallucinate facts
+    [X] Knowledge cutoff (training data date)
+    [X] Can't access your private documents
+    [X] May hallucinate facts
 
 Solution: Retrieve relevant context, then generate
 
-    ┌─────────────────────────────────────────────────────┐
-    │                                                     │
-    │  User Query: "What's our refund policy?"            │
-    │        │                                            │
-    │        ▼                                            │
-    │  ┌──────────────┐   ┌─────────────────────────────┐│
-    │  │  Embedding   │──▶│   Vector Database           ││
-    │  │    Model     │   │ (your company documents)    ││
-    │  └──────────────┘   └─────────────┬───────────────┘│
-    │                                    │                │
-    │                     Retrieved: "Refunds within 30  ││
-    │                     days with receipt..."          ││
-    │                                    │                │
-    │                                    ▼                │
-    │  ┌─────────────────────────────────────────────────┐│
-    │  │ LLM receives: Query + Retrieved Context         ││
-    │  │                                                 ││
-    │  │ Generates: "Based on our policy, you can get   ││
-    │  │ a refund within 30 days if you have your       ││
-    │  │ receipt..."                                     ││
-    │  └─────────────────────────────────────────────────┘│
-    │                                                     │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |                                                     |
+    |  User Query: "What's our refund policy?"            |
+    |        |                                            |
+    |        v                                            |
+    |  +--------------+   +-----------------------------+|
+    |  |  Embedding   |-->|   Vector Database           ||
+    |  |    Model     |   | (your company documents)    ||
+    |  +--------------+   +-------------+---------------+|
+    |                                    |                |
+    |                     Retrieved: "Refunds within 30  ||
+    |                     days with receipt..."          ||
+    |                                    |                |
+    |                                    v                |
+    |  +-------------------------------------------------+|
+    |  | LLM receives: Query + Retrieved Context         ||
+    |  |                                                 ||
+    |  | Generates: "Based on our policy, you can get   ||
+    |  | a refund within 30 days if you have your       ||
+    |  | receipt..."                                     ||
+    |  +-------------------------------------------------+|
+    |                                                     |
+    +-----------------------------------------------------+
     """)
     pause()
 
@@ -615,58 +615,58 @@ Solution: Retrieve relevant context, then generate
         ("Step 1: User Query", """
     User: "What are the side effects of aspirin?"
 
-    ┌─────────────────────────────────────────────────────┐
-    │  "What are the side effects of aspirin?"            │
-    └─────────────────────────────────────────────────────┘
+    +-----------------------------------------------------+
+    |  "What are the side effects of aspirin?"            |
+    +-----------------------------------------------------+
         """),
         ("Step 2: Embed Query", """
-    Query → Embedding Model → [0.12, -0.34, 0.56, ...]
+    Query -> Embedding Model -> [0.12, -0.34, 0.56, ...]
 
-    ┌──────────────────┐     ┌───────────────────────────┐
-    │ Query            │ ──▶ │ [0.12, -0.34, 0.56, ...]  │
-    └──────────────────┘     └───────────────────────────┘
+    +------------------+     +---------------------------+
+    | Query            | --> | [0.12, -0.34, 0.56, ...]  |
+    +------------------+     +---------------------------+
         """),
         ("Step 3: Search Vector Database", """
-    Query embedding → Find similar document chunks
+    Query embedding -> Find similar document chunks
 
-    ┌───────────────────────────────────────────────────┐
-    │  Vector DB                                        │
-    │  ┌────────────────────────────────────────────┐  │
-    │  │ Doc 1: Aspirin overview...     (0.89 sim)  │◀─│─ Most similar!
-    │  │ Doc 2: Aspirin side effects... (0.92 sim)  │◀─│─ Best match!
-    │  │ Doc 3: Ibuprofen info...       (0.45 sim)  │  │
-    │  │ Doc 4: Heart medication...     (0.32 sim)  │  │
-    │  └────────────────────────────────────────────┘  │
-    └───────────────────────────────────────────────────┘
+    +---------------------------------------------------+
+    |  Vector DB                                        |
+    |  +--------------------------------------------+  |
+    |  | Doc 1: Aspirin overview...     (0.89 sim)  |<-|- Most similar!
+    |  | Doc 2: Aspirin side effects... (0.92 sim)  |<-|- Best match!
+    |  | Doc 3: Ibuprofen info...       (0.45 sim)  |  |
+    |  | Doc 4: Heart medication...     (0.32 sim)  |  |
+    |  +--------------------------------------------+  |
+    +---------------------------------------------------+
         """),
         ("Step 4: Augment Prompt", """
     Combine query with retrieved context:
 
-    ┌───────────────────────────────────────────────────┐
-    │ CONTEXT:                                          │
-    │ "Aspirin side effects include stomach upset,      │
-    │  bleeding risk, allergic reactions. Common        │
-    │  symptoms: nausea, heartburn. Serious: GI         │
-    │  bleeding, Reye's syndrome in children..."        │
-    │                                                   │
-    │ QUERY: What are the side effects of aspirin?      │
-    │                                                   │
-    │ Answer based on the context above.                │
-    └───────────────────────────────────────────────────┘
+    +---------------------------------------------------+
+    | CONTEXT:                                          |
+    | "Aspirin side effects include stomach upset,      |
+    |  bleeding risk, allergic reactions. Common        |
+    |  symptoms: nausea, heartburn. Serious: GI         |
+    |  bleeding, Reye's syndrome in children..."        |
+    |                                                   |
+    | QUERY: What are the side effects of aspirin?      |
+    |                                                   |
+    | Answer based on the context above.                |
+    +---------------------------------------------------+
         """),
         ("Step 5: Generate Response", """
     LLM generates grounded response:
 
-    ┌───────────────────────────────────────────────────┐
-    │ "Based on medical information, aspirin can cause  │
-    │  several side effects:                            │
-    │                                                   │
-    │  Common: stomach upset, nausea, heartburn         │
-    │  Serious: GI bleeding, allergic reactions         │
-    │  Warning: Risk of Reye's syndrome in children     │
-    │                                                   │
-    │  Consult your doctor if you experience..."        │
-    └───────────────────────────────────────────────────┘
+    +---------------------------------------------------+
+    | "Based on medical information, aspirin can cause  |
+    |  several side effects:                            |
+    |                                                   |
+    |  Common: stomach upset, nausea, heartburn         |
+    |  Serious: GI bleeding, allergic reactions         |
+    |  Warning: Risk of Reye's syndrome in children     |
+    |                                                   |
+    |  Consult your doctor if you experience..."        |
+    +---------------------------------------------------+
         """),
     ]
 

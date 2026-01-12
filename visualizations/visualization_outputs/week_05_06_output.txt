@@ -1,95 +1,20 @@
-"""
-Week 5-6 Visualizer: Self-Supervised Learning and RNNs
-Interactive ASCII visualizations for SSL and sequence models.
-Run: python week_05_06_visualizer.py
-"""
+======================================================================
+  WEEK 05 06 VISUALIZATIONS
+======================================================================
 
-import time
-import os
-import random
+Error capturing week_05_06_visualizer.visualize_self_supervised: module 'week_05_06_visualizer' has no attribute 'visualize_self_supervised'
 
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
 
-def pause(msg="Press Enter to continue..."):
-    input(f"\n{msg}")
+----------------------------------------------------------------------
 
-def print_header(title):
-    clear_screen()
-    width = 60
-    print("=" * width)
-    print(f"{title:^{width}}")
-    print("=" * width)
-    print()
 
-# ============================================================
-# VISUALIZATION 1: Self-Supervised Learning Overview
-# ============================================================
+======================================================================
 
-def visualize_ssl_overview():
-    print_header("VISUALIZATION 1: Self-Supervised Learning")
+============================================================
+       VISUALIZATION 2: Contrastive Learning (SimCLR)       
+============================================================
 
-    print("""
-The Data Labeling Problem
-===========================================================
 
-Supervised Learning:
-    +---------+     Human      +---------+
-    |  Image  | --Labeling--> |  "cat"  |
-    +---------+    (Expensive!) +---------+
-
-    For ImageNet: 14 million images x $0.10/label = $1.4 million!
-
-Self-Supervised Learning:
-    +---------+    Automatic    +---------+
-    |  Data   | --Processing--> |  Labels |
-    +---------+      (Free!)    +---------+
-
-    The data ITSELF provides the supervision signal!
-    """)
-    pause()
-
-    print("""
-SSL Paradigms
-===========================================================
-
-1. PRETEXT TASKS: Create labels from data transformations
-
-    Original Image    ->    Task: Predict rotation
-    +-----------+          +-----------+
-    |    🐱     |          |    🐱     |  Label: 0°
-    |           |          |   ↷90°   |  Label: 90°
-    +-----------+          |   ↷180°  |  Label: 180°
-                           |   ↷270°  |  Label: 270°
-                           +-----------+
-
-2. CONTRASTIVE LEARNING: Learn similar vs different
-
-    Same image, different augmentations -> SIMILAR
-    Different images -> DIFFERENT
-
-    +----+ ~= +----+     (same image, augmented)
-    | 🐱 |   | 🐱 |
-    +----+   +----+
-
-    +----+ != +----+     (different images)
-    | 🐱 |   | 🐕 |
-    +----+   +----+
-
-3. MASKED PREDICTION: Predict hidden parts
-
-    "The cat sat on the [MASK]" -> predict "mat"
-    """)
-    pause()
-
-# ============================================================
-# VISUALIZATION 2: Contrastive Learning
-# ============================================================
-
-def visualize_contrastive():
-    print_header("VISUALIZATION 2: Contrastive Learning (SimCLR)")
-
-    print("""
 SimCLR Pipeline
 ===========================================================
 
@@ -106,10 +31,11 @@ Step 1: Take an image and create two augmented views
 +-------+ +-------+
 
 These are "positive pairs" - they should have similar embeddings!
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Step 2: Encode both views with the same network
 
     +-------+         +-------+
@@ -135,10 +61,11 @@ Step 2: Encode both views with the same network
     +-------+         +-------+
     |  z_i  |         |  z_j  |   (for contrastive loss)
     +-------+         +-------+
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Step 3: Contrastive loss (NT-Xent)
 ===========================================================
 
@@ -161,10 +88,11 @@ Each sample has 1 positive pair and (2N-2) negative pairs.
     Loss = -log(similarity(z_1a, z_1b) / sum of all similarities)
 
     Pull positives TOGETHER, push negatives APART!
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Embedding Space Visualization
 ===========================================================
 
@@ -184,17 +112,22 @@ Before training:                After training:
     ^ = birds
 
     The network learns WHAT makes images similar!
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 3: RNN Basics
-# ============================================================
+============================================================
 
-def visualize_rnn():
-    print_header("VISUALIZATION 3: Recurrent Neural Networks")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+         VISUALIZATION 3: Recurrent Neural Networks         
+============================================================
+
+
 Why RNNs?
 ===========================================================
 
@@ -212,10 +145,11 @@ RNN Solution: Process one element at a time, maintain "memory"
            ^            ^            ^
           x_1          x_2          x_3
          "The"        "cat"        "sat"
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 RNN Architecture (Unrolled)
 ===========================================================
 
@@ -239,81 +173,97 @@ The same weights W are used at every time step!
 Equations:
     h_t = tanh(W_hh x h_{t-1} + W_xh x x_t + b_h)
     y_t = W_hy x h_t + b_y
-    """)
-    pause()
+    
 
-    # Animated RNN processing
-    print_header("VISUALIZATION 3: RNN Processing (Animated)")
+============================================================
 
-    sentence = ["The", "cat", "sat"]
-    states = [
-        "Initial state (zero)",
-        "Processed 'The'",
-        "Processed 'cat'",
-        "Processed 'sat'"
-    ]
 
-    for i, state in enumerate(states):
-        clear_screen()
-        print("=" * 60)
-        print(f"{'RNN PROCESSING ANIMATION':^60}")
-        print("=" * 60)
+======================================================================
 
-        print(f"\nProcessing: {' '.join(sentence[:i])}")
-        print(f"Current state: {state}\n")
+============================================================
+         VISUALIZATION 3: RNN Processing (Animated)         
+============================================================
 
-        # Draw the unrolled RNN
-        print("    ", end="")
-        for j in range(4):
-            if j <= i:
-                print(f"  h_{j}  ", end="")
-            else:
-                print("        ", end="")
-        print()
 
-        print("    ", end="")
-        for j in range(4):
-            if j < i:
-                print("--->---", end="")
-            elif j == i:
-                print("  *    ", end="")
-            else:
-                print("       ", end="")
-        print()
+======================================================================
 
-        print("    ", end="")
-        for j in range(4):
-            if j <= i:
-                print("  ^    ", end="")
-            else:
-                print("       ", end="")
-        print()
+============================================================
+                  RNN PROCESSING ANIMATION                  
+============================================================
 
-        print("    ", end="")
-        for j in range(3):
-            if j < i:
-                word = f"'{sentence[j]}'"
-                print(f"{word:^7}", end="")
-            else:
-                print("       ", end="")
-        print()
+Processing: 
+Current state: Initial state (zero)
 
-        if i > 0:
-            print(f"\n    Hidden state h_{i} now contains information about:")
-            print(f"    [{' -> '.join(sentence[:i])}]")
+      h_0                          
+      *                         
+      ^                         
+                         
 
-        time.sleep(1.5)
+======================================================================
 
-    pause()
+============================================================
+                  RNN PROCESSING ANIMATION                  
+============================================================
 
-# ============================================================
-# VISUALIZATION 4: Vanishing Gradient Problem
-# ============================================================
+Processing: The
+Current state: Processed 'The'
 
-def visualize_vanishing_gradient():
-    print_header("VISUALIZATION 4: Vanishing Gradient Problem")
+      h_0    h_1                  
+    --->---  *                  
+      ^      ^                  
+     'The'               
 
-    print("""
+    Hidden state h_1 now contains information about:
+    [The]
+
+======================================================================
+
+============================================================
+                  RNN PROCESSING ANIMATION                  
+============================================================
+
+Processing: The cat
+Current state: Processed 'cat'
+
+      h_0    h_1    h_2          
+    --->------>---  *           
+      ^      ^      ^           
+     'The'  'cat'        
+
+    Hidden state h_2 now contains information about:
+    [The -> cat]
+
+======================================================================
+
+============================================================
+                  RNN PROCESSING ANIMATION                  
+============================================================
+
+Processing: The cat sat
+Current state: Processed 'sat'
+
+      h_0    h_1    h_2    h_3  
+    --->------>------>---  *    
+      ^      ^      ^      ^    
+     'The'  'cat'  'sat' 
+
+    Hidden state h_3 now contains information about:
+    [The -> cat -> sat]
+
+============================================================
+
+
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+        VISUALIZATION 4: Vanishing Gradient Problem         
+============================================================
+
+
 The Problem with Long Sequences
 ===========================================================
 
@@ -328,10 +278,11 @@ multiplied at each time step:
 
 If |W_hh| < 1: gradient -> 0 (vanishing)
 If |W_hh| > 1: gradient -> inf (exploding)
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Gradient Flow Visualization
 ===========================================================
 
@@ -355,10 +306,11 @@ Backward pass (gradient flows left):
     Vanished!                           Original gradient
 
     Gradients shrink exponentially -> early layers don't learn!
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Why This Matters
 ===========================================================
 
@@ -382,17 +334,22 @@ Solutions:
     2. GRU (Gated Recurrent Unit)
     3. Skip connections
     4. Attention mechanisms (Week 7!)
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 5: LSTM
-# ============================================================
+============================================================
 
-def visualize_lstm():
-    print_header("VISUALIZATION 5: Long Short-Term Memory (LSTM)")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+       VISUALIZATION 5: Long Short-Term Memory (LSTM)       
+============================================================
+
+
 LSTM: Solving the Vanishing Gradient Problem
 ===========================================================
 
@@ -422,10 +379,11 @@ A "highway" that information can flow through unchanged!
     i = input gate
     c̃ = candidate values
     o = output gate
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 The Three Gates
 ===========================================================
 
@@ -451,10 +409,11 @@ The Three Gates
 
     o_t = s(W_o · [h_{t-1}, x_t] + b_o)
     h_t = o_t x tanh(c_t)
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 LSTM Step-by-Step
 ===========================================================
 
@@ -483,10 +442,11 @@ Step 3: "Paris"
     +--------------------------------------+
 
     Output: Use h to predict next word
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Why LSTM Solves Vanishing Gradients
 ===========================================================
 
@@ -507,17 +467,22 @@ Regular RNN:              LSTM:
     |                                                     |
     | Gates control what gets ON and OFF the belt.        |
     +-----------------------------------------------------+
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 6: GRU
-# ============================================================
+============================================================
 
-def visualize_gru():
-    print_header("VISUALIZATION 6: Gated Recurrent Unit (GRU)")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+        VISUALIZATION 6: Gated Recurrent Unit (GRU)         
+============================================================
+
+
 GRU: Simplified LSTM
 ===========================================================
 
@@ -536,10 +501,11 @@ LSTM (4 gates):              GRU (2 gates):
     | matrices       |       | matrices       |
     +----------------+       +----------------+
          LSTM                      GRU
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 GRU Equations
 ===========================================================
 
@@ -563,10 +529,11 @@ Visual:
 Update gate z_t:
     z_t ~= 1: Use new candidate h̃_t (update)
     z_t ~= 0: Keep old h_{t-1} (remember)
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 LSTM vs GRU Comparison
 ===========================================================
 
@@ -586,17 +553,22 @@ When to use which?
     | In practice: Try both, see what works!              |
     | Or: Use Transformers (Week 7)                       |
     +-----------------------------------------------------+
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 7: Sequence-to-Sequence
-# ============================================================
+============================================================
 
-def visualize_seq2seq():
-    print_header("VISUALIZATION 7: Sequence-to-Sequence Models")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+        VISUALIZATION 7: Sequence-to-Sequence Models        
+============================================================
+
+
 Seq2Seq: Map one sequence to another
 ===========================================================
 
@@ -614,10 +586,11 @@ Architecture: Encoder-Decoder
     +---------+              +---------+
     | ENCODER |--> context ->| DECODER |
     +---------+              +---------+
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Encoder-Decoder Architecture
 ===========================================================
 
@@ -636,10 +609,11 @@ Encoder-Decoder Architecture
 
     Decoder generates output one token at a time,
     using previous output as next input.
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 The Bottleneck Problem
 ===========================================================
 
@@ -667,75 +641,10 @@ Solution: ATTENTION (Week 7!)
     +---------------------------------------+
                         v
                    Weighted sum for each decoder step!
-    """)
-    pause()
+    
 
-# ============================================================
-# MAIN MENU
-# ============================================================
+============================================================
 
-def main():
-    while True:
-        print_header("WEEK 5-6: SSL AND RNNs")
-        print("""
-Choose a visualization:
 
-    [1] Self-Supervised Learning Overview
-        - Pretext tasks, contrastive learning, masking
 
-    [2] Contrastive Learning (SimCLR)
-        - Positive pairs, negative pairs, loss function
-
-    [3] RNN Basics
-        - Recurrent architecture, unrolling, equations
-
-    [4] Vanishing Gradient Problem
-        - Why RNNs struggle with long sequences
-
-    [5] LSTM
-        - Gates, cell state, solving vanishing gradients
-
-    [6] GRU
-        - Simplified gating, comparison with LSTM
-
-    [7] Sequence-to-Sequence
-        - Encoder-decoder, the bottleneck problem
-
-    [A] Run ALL visualizations
-
-    [Q] Quit
-        """)
-
-        choice = input("Enter choice: ").strip().upper()
-
-        if choice == '1':
-            visualize_ssl_overview()
-        elif choice == '2':
-            visualize_contrastive()
-        elif choice == '3':
-            visualize_rnn()
-        elif choice == '4':
-            visualize_vanishing_gradient()
-        elif choice == '5':
-            visualize_lstm()
-        elif choice == '6':
-            visualize_gru()
-        elif choice == '7':
-            visualize_seq2seq()
-        elif choice == 'A':
-            visualize_ssl_overview()
-            visualize_contrastive()
-            visualize_rnn()
-            visualize_vanishing_gradient()
-            visualize_lstm()
-            visualize_gru()
-            visualize_seq2seq()
-        elif choice == 'Q':
-            print("\nGoodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
-            time.sleep(1)
-
-if __name__ == "__main__":
-    main()
+----------------------------------------------------------------------

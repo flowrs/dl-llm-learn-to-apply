@@ -1,35 +1,15 @@
-"""
-Week 8-10 Visualizer: Advanced Topics
-Interactive ASCII visualizations for advanced deep learning.
-Run: python week_08_10_visualizer.py
-"""
+======================================================================
+  WEEK 08 10 VISUALIZATIONS
+======================================================================
 
-import time
-import os
-import random
 
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
+======================================================================
 
-def pause(msg="Press Enter to continue..."):
-    input(f"\n{msg}")
+============================================================
+       VISUALIZATION 1: Generative vs Discriminative        
+============================================================
 
-def print_header(title):
-    clear_screen()
-    width = 60
-    print("=" * width)
-    print(f"{title:^{width}}")
-    print("=" * width)
-    print()
 
-# ============================================================
-# VISUALIZATION 1: Generative vs Discriminative Models
-# ============================================================
-
-def visualize_gen_vs_disc():
-    print_header("VISUALIZATION 1: Generative vs Discriminative")
-
-    print("""
 Two Approaches to Machine Learning
 ===========================================================
 
@@ -62,17 +42,22 @@ GENERATIVE: Learn data distribution
     +-------------------------------------+
     Models: VAE, GAN, Diffusion
     Task: Generate new samples from the distribution
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 2: Variational Autoencoder (VAE)
-# ============================================================
+============================================================
 
-def visualize_vae():
-    print_header("VISUALIZATION 2: Variational Autoencoder")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+          VISUALIZATION 2: Variational Autoencoder          
+============================================================
+
+
 VAE: Learn a latent representation for generation
 ===========================================================
 
@@ -95,10 +80,11 @@ VAE: Learn a latent representation for generation
                     +-------------+
 
     Key insight: Encoder outputs u and s, then SAMPLE z ~ N(u, s)
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 The Reparameterization Trick
 ===========================================================
 
@@ -123,10 +109,11 @@ Solution: Reparameterize
     |                         (no gradient)              |
     |                                                     |
     +-----------------------------------------------------+
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 VAE Loss Function
 ===========================================================
 
@@ -148,17 +135,22 @@ VAE Loss Function
     With KL: Latent space is organized, can sample new z!
 
     Generation: z ~ N(0,1) -> Decoder -> New sample!
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 3: Generative Adversarial Network (GAN)
-# ============================================================
+============================================================
 
-def visualize_gan():
-    print_header("VISUALIZATION 3: Generative Adversarial Network")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+      VISUALIZATION 3: Generative Adversarial Network       
+============================================================
+
+
 GAN: Two Networks Playing a Game
 ===========================================================
 
@@ -179,14 +171,26 @@ GAN: Two Networks Playing a Game
 
     G tries to FOOL D (generate realistic samples)
     D tries to CATCH G (correctly classify real vs fake)
-    """)
-    pause()
+    
 
-    # Animated GAN training
-    print_header("VISUALIZATION 3: GAN Training Animation")
+============================================================
 
-    stages = [
-        ("Early Training", """
+
+======================================================================
+
+============================================================
+          VISUALIZATION 3: GAN Training Animation           
+============================================================
+
+
+======================================================================
+
+============================================================
+                   GAN TRAINING PROGRESS                    
+============================================================
+
+Early Training
+
     Generator output:         Real data:
     +--------------+         +--------------+
     |   ???  ☒☒    |         |     🐱       |
@@ -194,17 +198,33 @@ GAN: Two Networks Playing a Game
     |    ???       |         |              |
     +--------------+         +--------------+
     D says: "Obviously fake!"  (D accuracy: 99%)
-        """),
-        ("Mid Training", """
+        
+
+======================================================================
+
+============================================================
+                   GAN TRAINING PROGRESS                    
+============================================================
+
+Mid Training
+
     Generator output:         Real data:
     +--------------+         +--------------+
     |     ^        |         |     🐱       |
-    |    /|\\       |         |              |
+    |    /|\       |         |              |
     |              |         |              |
     +--------------+         +--------------+
     D says: "Probably fake"   (D accuracy: 75%)
-        """),
-        ("Good Training", """
+        
+
+======================================================================
+
+============================================================
+                   GAN TRAINING PROGRESS                    
+============================================================
+
+Good Training
+
     Generator output:         Real data:
     +--------------+         +--------------+
     |     🐱?      |         |     🐱       |
@@ -213,21 +233,11 @@ GAN: Two Networks Playing a Game
     +--------------+         +--------------+
     D says: "Hmm... 50/50"    (D accuracy: ~50%)
     G has learned to generate realistic samples!
-        """),
-    ]
+        
 
-    for title, diagram in stages:
-        clear_screen()
-        print("=" * 60)
-        print(f"{'GAN TRAINING PROGRESS':^60}")
-        print("=" * 60)
-        print(f"\n{title}")
-        print(diagram)
-        time.sleep(2)
+============================================================
 
-    pause()
 
-    print("""
 GAN Training Dynamics
 ===========================================================
 
@@ -250,17 +260,22 @@ GAN Training Dynamics
     - Mode collapse (G generates same thing)
     - Training instability
     - Hard to evaluate quality
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 4: Diffusion Models
-# ============================================================
+============================================================
 
-def visualize_diffusion():
-    print_header("VISUALIZATION 4: Diffusion Models")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+             VISUALIZATION 4: Diffusion Models              
+============================================================
+
+
 Diffusion: Gradually Add then Remove Noise
 ===========================================================
 
@@ -283,41 +298,79 @@ Reverse process: Learn to DENOISE step by step
     +-----+     +-----+     +-----+            +-----+
     Pure        Less        Even              Clean
     noise       noisy       less              image!
-    """)
-    pause()
+    
 
-    # Animated diffusion
-    print_header("VISUALIZATION 4: Diffusion Process Animation")
+============================================================
 
-    forward_steps = [
-        ("t=0 (Original)", """
+
+======================================================================
+
+============================================================
+        VISUALIZATION 4: Diffusion Process Animation        
+============================================================
+
+FORWARD PROCESS (Adding noise):
+
+
+======================================================================
+
+============================================================
+                     FORWARD DIFFUSION                      
+============================================================
+
+t=0 (Original)
+
     +-----------------+
     |     o   o       |
     |       v         |
     |      ---        |
-    |     /   \\       |
+    |     /   \       |
     |    (face)       |
     +-----------------+
-        """),
-        ("t=250 (Light noise)", """
+        
+
+======================================================================
+
+============================================================
+                     FORWARD DIFFUSION                      
+============================================================
+
+t=250 (Light noise)
+
     +-----------------+
     |  .  o . o  .    |
     |    .  v  .      |
     |   .  --- .      |
-    |  .  /   \\ .     |
+    |  .  /   \ .     |
     |   . (face) .    |
     +-----------------+
-        """),
-        ("t=500 (Medium noise)", """
+        
+
+======================================================================
+
+============================================================
+                     FORWARD DIFFUSION                      
+============================================================
+
+t=500 (Medium noise)
+
     +-----------------+
     | . . o . o . .   |
     |  . . . v . . .  |
     | . . . - . - . . |
-    |  . . / . \\ . .  |
+    |  . . / . \ . .  |
     | . . . . . . . . |
     +-----------------+
-        """),
-        ("t=750 (Heavy noise)", """
+        
+
+======================================================================
+
+============================================================
+                     FORWARD DIFFUSION                      
+============================================================
+
+t=750 (Heavy noise)
+
     +-----------------+
     | . . . . . . . . |
     | . . . . . . . . |
@@ -325,8 +378,16 @@ Reverse process: Learn to DENOISE step by step
     | . . . . . . . . |
     | . . . . . . . . |
     +-----------------+
-        """),
-        ("t=1000 (Pure noise)", """
+        
+
+======================================================================
+
+============================================================
+                     FORWARD DIFFUSION                      
+============================================================
+
+t=1000 (Pure noise)
+
     +-----------------+
     | .=.#.=.#.=.#.=. |
     | #.=.#.=.#.=.#.= |
@@ -334,33 +395,100 @@ Reverse process: Learn to DENOISE step by step
     | =.#.=.#.=.#.=.# |
     | .=.#.=.#.=.#.=. |
     +-----------------+
-        """),
-    ]
+        
 
-    print("FORWARD PROCESS (Adding noise):\n")
-    for title, diagram in forward_steps:
-        clear_screen()
-        print("=" * 60)
-        print(f"{'FORWARD DIFFUSION':^60}")
-        print("=" * 60)
-        print(f"\n{title}")
-        print(diagram)
-        time.sleep(1)
 
-    print("\n\nREVERSE PROCESS (Denoising - what the model learns):\n")
+REVERSE PROCESS (Denoising - what the model learns):
 
-    for title, diagram in reversed(forward_steps):
-        clear_screen()
-        print("=" * 60)
-        print(f"{'REVERSE DIFFUSION (GENERATION)':^60}")
-        print("=" * 60)
-        print(f"\n{title}")
-        print(diagram)
-        time.sleep(1)
 
-    pause()
+======================================================================
 
-    print("""
+============================================================
+               REVERSE DIFFUSION (GENERATION)               
+============================================================
+
+t=1000 (Pure noise)
+
+    +-----------------+
+    | .=.#.=.#.=.#.=. |
+    | #.=.#.=.#.=.#.= |
+    | .#.=.#.=.#.=.#. |
+    | =.#.=.#.=.#.=.# |
+    | .=.#.=.#.=.#.=. |
+    +-----------------+
+        
+
+======================================================================
+
+============================================================
+               REVERSE DIFFUSION (GENERATION)               
+============================================================
+
+t=750 (Heavy noise)
+
+    +-----------------+
+    | . . . . . . . . |
+    | . . . . . . . . |
+    | . . . . . . . . |
+    | . . . . . . . . |
+    | . . . . . . . . |
+    +-----------------+
+        
+
+======================================================================
+
+============================================================
+               REVERSE DIFFUSION (GENERATION)               
+============================================================
+
+t=500 (Medium noise)
+
+    +-----------------+
+    | . . o . o . .   |
+    |  . . . v . . .  |
+    | . . . - . - . . |
+    |  . . / . \ . .  |
+    | . . . . . . . . |
+    +-----------------+
+        
+
+======================================================================
+
+============================================================
+               REVERSE DIFFUSION (GENERATION)               
+============================================================
+
+t=250 (Light noise)
+
+    +-----------------+
+    |  .  o . o  .    |
+    |    .  v  .      |
+    |   .  --- .      |
+    |  .  /   \ .     |
+    |   . (face) .    |
+    +-----------------+
+        
+
+======================================================================
+
+============================================================
+               REVERSE DIFFUSION (GENERATION)               
+============================================================
+
+t=0 (Original)
+
+    +-----------------+
+    |     o   o       |
+    |       v         |
+    |      ---        |
+    |     /   \       |
+    |    (face)       |
+    +-----------------+
+        
+
+============================================================
+
+
 Diffusion Training Objective
 ===========================================================
 
@@ -386,17 +514,22 @@ Train a neural network e_th to predict the noise added:
     +-----------------------------------------------------+
 
     Generation: Start from pure noise, iteratively denoise
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 5: Model Interpretability
-# ============================================================
+============================================================
 
-def visualize_interpretability():
-    print_header("VISUALIZATION 5: Model Interpretability")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+          VISUALIZATION 5: Model Interpretability           
+============================================================
+
+
 Why Interpretability Matters
 ===========================================================
 
@@ -419,10 +552,11 @@ Methods for Understanding Models:
 
     4. PROBING
        What information is encoded in representations?
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Saliency Maps
 ===========================================================
 
@@ -434,8 +568,8 @@ Compute gradient of output w.r.t. input pixels:
     +--------------+      +--------------+
     |              |      |              |
     |     🐱       |      |     ####     |
-    |    /||\\      |  ->   |    ####     |
-    |   / || \\     |      |   .####.    |
+    |    /||\      |  ->   |    ####     |
+    |   / || \     |      |   .####.    |
     |              |      |              |
     +--------------+      +--------------+
 
@@ -443,10 +577,11 @@ Compute gradient of output w.r.t. input pixels:
 
     Reveals: Model focuses on cat's face for "cat" prediction
              Not on background (good!)
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Attention Visualization
 ===========================================================
 
@@ -468,17 +603,22 @@ Different heads learn different patterns:
     - Head 2: Noun-noun
     - Head 3: Adjacent words
     - Head 4: Beginning of sentence
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 6: Ethics and Bias
-# ============================================================
+============================================================
 
-def visualize_ethics():
-    print_header("VISUALIZATION 6: Ethics and Bias in AI")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+           VISUALIZATION 6: Ethics and Bias in AI           
+============================================================
+
+
 Sources of Bias in ML
 ===========================================================
 
@@ -514,10 +654,11 @@ Sources of Bias in ML
     |    But managers may rate biased                     |
     |                                                     |
     +-----------------------------------------------------+
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Fairness Metrics
 ===========================================================
 
@@ -544,10 +685,11 @@ Multiple (sometimes conflicting!) definitions of fair:
     |  Must choose which type of fairness matters         |
     |  for your specific application.                     |
     +-----------------------------------------------------+
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Mitigation Strategies
 ===========================================================
 
@@ -574,17 +716,22 @@ Mitigation Strategies
     |  4. Monitor deployed model for drift                |
     |  5. Create feedback mechanisms                      |
     +-----------------------------------------------------+
-    """)
-    pause()
+    
 
-# ============================================================
-# VISUALIZATION 7: Model Deployment
-# ============================================================
+============================================================
 
-def visualize_deployment():
-    print_header("VISUALIZATION 7: Model Deployment")
 
-    print("""
+
+----------------------------------------------------------------------
+
+
+======================================================================
+
+============================================================
+             VISUALIZATION 7: Model Deployment              
+============================================================
+
+
 From Notebook to Production
 ===========================================================
 
@@ -605,10 +752,11 @@ Production Requirements:
     [ ] Monitoring and alerting
     [ ] A/B testing capability
     [ ] Rollback mechanism
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Deployment Architecture
 ===========================================================
 
@@ -634,10 +782,11 @@ Deployment Architecture
                     +-------------------------------------+
 
 Horizontal scaling: Add more model servers as traffic grows
-    """)
-    pause()
+    
 
-    print("""
+============================================================
+
+
 Optimization for Production
 ===========================================================
 
@@ -668,75 +817,10 @@ Optimization for Production
        | Single: [1] [1] [1] [1] = 4 calls |
        | Batch:  [1,1,1,1] = 1 call     |
        +--------------------------------+
-    """)
-    pause()
+    
 
-# ============================================================
-# MAIN MENU
-# ============================================================
+============================================================
 
-def main():
-    while True:
-        print_header("WEEK 8-10: ADVANCED TOPICS")
-        print("""
-Choose a visualization:
 
-    [1] Generative vs Discriminative
-        - Two paradigms of ML
 
-    [2] Variational Autoencoder (VAE)
-        - Latent space, reparameterization trick
-
-    [3] Generative Adversarial Network (GAN)
-        - Generator vs discriminator game
-
-    [4] Diffusion Models
-        - Forward and reverse process, denoising
-
-    [5] Model Interpretability
-        - Saliency maps, attention visualization
-
-    [6] Ethics and Bias
-        - Sources of bias, fairness metrics
-
-    [7] Model Deployment
-        - Production architecture, optimization
-
-    [A] Run ALL visualizations
-
-    [Q] Quit
-        """)
-
-        choice = input("Enter choice: ").strip().upper()
-
-        if choice == '1':
-            visualize_gen_vs_disc()
-        elif choice == '2':
-            visualize_vae()
-        elif choice == '3':
-            visualize_gan()
-        elif choice == '4':
-            visualize_diffusion()
-        elif choice == '5':
-            visualize_interpretability()
-        elif choice == '6':
-            visualize_ethics()
-        elif choice == '7':
-            visualize_deployment()
-        elif choice == 'A':
-            visualize_gen_vs_disc()
-            visualize_vae()
-            visualize_gan()
-            visualize_diffusion()
-            visualize_interpretability()
-            visualize_ethics()
-            visualize_deployment()
-        elif choice == 'Q':
-            print("\nGoodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
-            time.sleep(1)
-
-if __name__ == "__main__":
-    main()
+----------------------------------------------------------------------
