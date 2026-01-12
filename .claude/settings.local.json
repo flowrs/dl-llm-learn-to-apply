@@ -40,7 +40,9 @@
       "Bash(gh repo fork:*)",
       "Bash(git remote set-url:*)",
       "Bash(git push:*)",
-      "Bash(git submodule:*)"
+      "Bash(git submodule:*)",
+      "WebFetch(domain:web.stanford.edu)",
+      "Bash(wc:*)"
     ]
   }
 }
