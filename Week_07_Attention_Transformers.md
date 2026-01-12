@@ -11,8 +11,9 @@
 5. [The Transformer](#the-transformer)
 6. [Positional Encoding](#positional-encoding)
 7. [Vision Transformer (ViT)](#vision-transformer-vit)
-8. [Coding Exercises](#coding-exercises)
-9. [Business Applications](#business-applications)
+8. [Transformer Variants for Language Models](#transformer-variants-for-language-models)
+9. [Coding Exercises](#coding-exercises)
+10. [Business Applications](#business-applications)
 
 ---
 
@@ -682,6 +683,357 @@
 │   • Special learnable embedding prepended to sequence                     │
 │   • Aggregates information from all patches via attention                 │
 │   • Used for final classification (like BERT)                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Transformer Variants for Language Models
+
+### Encoder-Only vs Decoder-Only vs Encoder-Decoder
+
+Understanding these three variants is crucial for working with modern LLMs.
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    THREE TRANSFORMER VARIANTS                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   1. ENCODER-ONLY (Bidirectional)                                          │
+│   ──────────────────────────────────                                       │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   "The cat [MASK] on the mat"                                       │  │
+│   │     │    │     │    │   │   │                                       │  │
+│   │     ▼    ▼     ▼    ▼   ▼   ▼                                       │  │
+│   │   ┌─────────────────────────────────┐                               │  │
+│   │   │        ENCODER LAYERS           │  Each token attends           │  │
+│   │   │    (bidirectional attention)    │  to ALL other tokens          │  │
+│   │   └─────────────────────────────────┘                               │  │
+│   │     │    │     │    │   │   │                                       │  │
+│   │     ▼    ▼     ▼    ▼   ▼   ▼                                       │  │
+│   │   [h₁] [h₂]  [h₃] [h₄][h₅][h₆]  → "sat" (fill in blank)           │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   Examples: BERT, RoBERTa, ALBERT, DistilBERT                              │
+│   Use cases: Classification, NER, sentence embeddings, retrieval          │
+│   Training: Masked Language Modeling (MLM) - predict [MASK] tokens        │
+│                                                                             │
+│                                                                             │
+│   2. DECODER-ONLY (Autoregressive / Causal)                                │
+│   ──────────────────────────────────────────                               │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   "The cat sat on the" → predict "mat"                              │  │
+│   │     │    │   │   │   │                                              │  │
+│   │     ▼    ▼   ▼   ▼   ▼                                              │  │
+│   │   ┌─────────────────────────────────┐                               │  │
+│   │   │        DECODER LAYERS           │  Each token attends           │  │
+│   │   │    (causal/masked attention)    │  only to PREVIOUS tokens      │  │
+│   │   └─────────────────────────────────┘                               │  │
+│   │     │    │   │   │   │                                              │  │
+│   │     ▼    ▼   ▼   ▼   ▼                                              │  │
+│   │   [h₁] [h₂][h₃][h₄][h₅] → P(next token | previous tokens)          │  │
+│   │                                                                     │  │
+│   │   CAUSAL MASKING:                                                   │  │
+│   │                                                                     │  │
+│   │   Token    Can attend to:                                           │  │
+│   │   "The"    [The]                                                    │  │
+│   │   "cat"    [The, cat]                                               │  │
+│   │   "sat"    [The, cat, sat]                                          │  │
+│   │   "on"     [The, cat, sat, on]                                      │  │
+│   │   "the"    [The, cat, sat, on, the]                                 │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   Examples: GPT-1/2/3/4, Claude, Llama, Mistral, Gemini                    │
+│   Use cases: Text generation, chat, code completion, reasoning            │
+│   Training: Causal Language Modeling - predict next token                 │
+│                                                                             │
+│                                                                             │
+│   3. ENCODER-DECODER (Seq2Seq)                                             │
+│   ────────────────────────────                                             │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Input: "Translate: Hello world"                                   │  │
+│   │            │      │      │                                          │  │
+│   │            ▼      ▼      ▼                                          │  │
+│   │   ┌─────────────────────────────────┐                               │  │
+│   │   │          ENCODER                │  Bidirectional                │  │
+│   │   └─────────────────────────────────┘  attention on input           │  │
+│   │            │      │      │                                          │  │
+│   │            └──────┼──────┘                                          │  │
+│   │                   │ (cross-attention)                               │  │
+│   │                   ▼                                                  │  │
+│   │   ┌─────────────────────────────────┐                               │  │
+│   │   │          DECODER                │  Causal attention +           │  │
+│   │   └─────────────────────────────────┘  cross-attention to encoder   │  │
+│   │            │      │                                                  │  │
+│   │            ▼      ▼                                                  │  │
+│   │        "Bonjour" "monde"                                            │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   Examples: T5, BART, mT5, FLAN-T5                                         │
+│   Use cases: Translation, summarization, question answering               │
+│   Training: Span corruption (T5) or denoising (BART)                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Why Decoder-Only Dominates for LLMs
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                  WHY DECODER-ONLY WON                                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ADVANTAGES OF DECODER-ONLY:                                              │
+│                                                                             │
+│   1. SIMPLICITY                                                            │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   One architecture, one objective, scales cleanly                   │  │
+│   │   - Encoder-decoder needs 2 stacks                                 │  │
+│   │   - BERT needs [MASK] tokens and special handling                  │  │
+│   │   - GPT: just predict next token, always                           │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   2. SCALING                                                               │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Every prediction is training signal:                              │  │
+│   │                                                                     │  │
+│   │   "The cat sat on the mat"                                         │  │
+│   │                                                                     │  │
+│   │   BERT: 1 [MASK] = 1 training signal per forward pass              │  │
+│   │   GPT:  6 positions = 6 training signals per forward pass          │  │
+│   │                                                                     │  │
+│   │   More efficient use of compute during training                    │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   3. GENERATION NATURAL                                                    │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Trained to generate → naturally good at generation               │  │
+│   │   BERT trained to fill blanks → needs tricks for generation        │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   4. IN-CONTEXT LEARNING EMERGES                                           │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Prompt: "Translate English to French:                            │  │
+│   │            sea otter → loutre de mer                                │  │
+│   │            cheese → fromage                                         │  │
+│   │            hello →"                                                 │  │
+│   │                                                                     │  │
+│   │   GPT continues: "bonjour"                                         │  │
+│   │                                                                     │  │
+│   │   No fine-tuning needed! Pattern completion = task completion      │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### KV Cache: Efficient Inference
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          KV CACHE                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   THE PROBLEM: Generating token-by-token is slow                           │
+│                                                                             │
+│   Without KV Cache (naive approach):                                       │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Generate "Hello world how are you"                                │  │
+│   │                                                                     │  │
+│   │   Step 1: Process [Hello]              → predict "world"            │  │
+│   │   Step 2: Process [Hello world]        → predict "how"              │  │
+│   │   Step 3: Process [Hello world how]    → predict "are"              │  │
+│   │   Step 4: Process [Hello world how are] → predict "you"             │  │
+│   │                                                                     │  │
+│   │   PROBLEM: We recompute K,V for "Hello" 4 times!                    │  │
+│   │            We recompute K,V for "world" 3 times!                    │  │
+│   │            Quadratic in sequence length O(n²)                       │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   THE SOLUTION: Cache Key and Value matrices                               │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Recall attention: Attention(Q, K, V) = softmax(QK^T/√d) V        │  │
+│   │                                                                     │  │
+│   │   INSIGHT: For autoregressive generation:                           │  │
+│   │   - Past tokens' K and V don't change                              │  │
+│   │   - Only need Q for the NEW token                                  │  │
+│   │   - Concatenate new K,V to cached K,V                              │  │
+│   │                                                                     │  │
+│   │   Step 1: Compute K₁,V₁ for "Hello"                                │  │
+│   │           Cache: K=[K₁], V=[V₁]                                    │  │
+│   │           Compute attention → "world"                               │  │
+│   │                                                                     │  │
+│   │   Step 2: Compute K₂,V₂ for "world" ONLY                           │  │
+│   │           Cache: K=[K₁,K₂], V=[V₁,V₂]                              │  │
+│   │           Compute attention with Q₂ and full cache → "how"         │  │
+│   │                                                                     │  │
+│   │   Step 3: Compute K₃,V₃ for "how" ONLY                             │  │
+│   │           Cache: K=[K₁,K₂,K₃], V=[V₁,V₂,V₃]                        │  │
+│   │           And so on...                                              │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   COMPLEXITY COMPARISON:                                                   │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Without KV Cache:                                                │  │
+│   │   - Each step: O(n²) attention computation                         │  │
+│   │   - n steps total: O(n³) overall                                   │  │
+│   │                                                                     │  │
+│   │   With KV Cache:                                                   │  │
+│   │   - Each step: O(n) attention (Q is 1 token, K/V are n tokens)     │  │
+│   │   - n steps total: O(n²) overall                                   │  │
+│   │                                                                     │  │
+│   │   SPEEDUP: ~n times faster for generation!                         │  │
+│   │                                                                     │  │
+│   │   MEMORY TRADE-OFF:                                                │  │
+│   │   - KV cache for 32K context, 70B model ≈ 10-20 GB per request    │  │
+│   │   - This is why long context is expensive                          │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   PSEUDOCODE:                                                              │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   def generate_with_kv_cache(prompt_tokens, max_new_tokens):       │  │
+│   │       # Initial forward pass for prompt (prefill)                  │  │
+│   │       logits, kv_cache = model(prompt_tokens, kv_cache=None)       │  │
+│   │                                                                     │  │
+│   │       generated = []                                                │  │
+│   │       for _ in range(max_new_tokens):                              │  │
+│   │           # Sample next token                                       │  │
+│   │           next_token = sample(logits[:, -1, :])                    │  │
+│   │           generated.append(next_token)                              │  │
+│   │                                                                     │  │
+│   │           # Forward only the NEW token, reuse cached K,V           │  │
+│   │           logits, kv_cache = model([next_token], kv_cache=kv_cache)│  │
+│   │                                                                     │  │
+│   │       return generated                                              │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Modern Positional Embeddings: RoPE
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│               ROTARY POSITION EMBEDDINGS (RoPE)                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Used in: Llama, Mistral, Qwen, and most modern LLMs                      │
+│                                                                             │
+│   PROBLEM WITH STANDARD POSITIONAL EMBEDDINGS:                             │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Learned: pos_embed[i] for i = 0, 1, ..., max_len-1               │  │
+│   │            → Can't extrapolate beyond training length               │  │
+│   │                                                                     │  │
+│   │   Sinusoidal: Works but doesn't encode relative positions well     │  │
+│   │                                                                     │  │
+│   │   WHAT WE WANT:                                                    │  │
+│   │   - Relative position matters: "cat sat" should relate similarly   │  │
+│   │     whether at positions (0,1) or (100,101)                        │  │
+│   │   - Extrapolate to longer sequences than training                  │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   RoPE IDEA: Encode position by ROTATING query and key vectors             │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Standard attention: score = q · k                                │  │
+│   │                                                                     │  │
+│   │   RoPE attention: score = R(q, pos_q) · R(k, pos_k)                │  │
+│   │                        = q · R(k, pos_k - pos_q)                    │  │
+│   │                                                                     │  │
+│   │   Where R is a rotation matrix based on position                   │  │
+│   │                                                                     │  │
+│   │   KEY INSIGHT: Score depends on RELATIVE position (pos_k - pos_q)  │  │
+│   │   Not absolute positions!                                           │  │
+│   │                                                                     │  │
+│   │   ROTATION IN 2D (simplified):                                      │  │
+│   │                                                                     │  │
+│   │   R(θ) = [cos(θ)  -sin(θ)]    Applied to pairs of dimensions       │  │
+│   │          [sin(θ)   cos(θ)]    θ = position × frequency              │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   BENEFITS:                                                                │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   1. Relative position encoding (translation invariant)             │  │
+│   │   2. Decaying attention with distance (natural bias)                │  │
+│   │   3. Can extrapolate to longer sequences (with techniques)          │  │
+│   │   4. No additional parameters to learn                              │  │
+│   │   5. Efficient computation (element-wise operations)                │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│   WHY IT MATTERS FOR LLMs:                                                 │
+│   ┌─────────────────────────────────────────────────────────────────────┐  │
+│   │                                                                     │  │
+│   │   Llama trained on 4K context → Extended to 32K, 128K with RoPE    │  │
+│   │   techniques (position interpolation, NTK-aware scaling)            │  │
+│   │                                                                     │  │
+│   │   This is how Claude, GPT-4, etc. support long context windows     │  │
+│   │                                                                     │  │
+│   └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Summary: Building Blocks for LLMs
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│              FROM TRANSFORMERS TO LLMs: KEY CONCEPTS                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   This section covered the critical concepts that bridge                    │
+│   standard Transformers to Large Language Models:                           │
+│                                                                             │
+│   ✓ Architecture Choice                                                    │
+│     └── Decoder-only (GPT-style) dominates modern LLMs                     │
+│                                                                             │
+│   ✓ Causal Masking                                                         │
+│     └── Each token only attends to previous tokens                         │
+│     └── Enables autoregressive generation                                  │
+│                                                                             │
+│   ✓ KV Cache                                                               │
+│     └── Cache past Key/Value matrices for efficient generation             │
+│     └── Reduces complexity from O(n³) to O(n²)                             │
+│                                                                             │
+│   ✓ Positional Embeddings                                                  │
+│     └── RoPE enables relative position and length extrapolation            │
+│                                                                             │
+│   NEXT: Week 11 covers LLM-specific topics:                                │
+│     - Tokenization (BPE, vocabulary)                                       │
+│     - Pre-training objectives and scaling laws                             │
+│     - Fine-tuning (full, LoRA, RLHF)                                       │
+│     - Prompting techniques and in-context learning                         │
+│     - Inference optimization                                               │
+│     - Building LLM applications                                            │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```

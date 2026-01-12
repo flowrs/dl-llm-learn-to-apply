@@ -24,7 +24,8 @@ Original Structure:
 - Weeks 3-4: CNNs, training techniques, optimization
 - Weeks 5-6: Self-supervised learning, RNNs, LSTMs
 - Week 7: Attention mechanisms, Transformers, ViT
-- Weeks 8-10: Detection, segmentation, generative models, RL, LLMs
+- Weeks 8-10: Detection, segmentation, generative models, RL
+- Week 11: Large Language Models (tokenization, pre-training, fine-tuning, RLHF, prompting, RAG)
 
 ### Phase 2: Unified Conceptual Documentation
 
@@ -226,6 +227,46 @@ Solution: StyleMatch story continues (2026-2028):
 - Fine-tuning vs API tradeoffs
 - Cross-flywheel data synergies
 
+### Phase 11: LLM Week and Interactive Visualizations
+
+Added `Week_11_Large_Language_Models.md` to provide comprehensive LLM coverage:
+
+```
+Problem: LLMs are the frontier but course materials end at Week 10
+
+Solution: Complete LLM guide covering the full stack:
+├── Tokenization (BPE, vocabulary, token quirks)
+├── Pre-training (next token prediction, data, scaling)
+├── Scaling laws (Chinchilla, emergent capabilities)
+├── Fine-tuning (full, LoRA, QLoRA)
+├── RLHF (reward models, PPO, DPO)
+├── Prompting (zero/few-shot, chain-of-thought, self-consistency)
+├── In-context learning
+├── Inference optimization (KV cache, quantization, batching)
+└── Building LLM applications (RAG, agents, tool use)
+```
+
+Added `visualizations/` folder with interactive ASCII diagram programs:
+
+```
+Problem: Static diagrams in markdown don't show step-by-step processes
+
+Solution: Python console programs for each week:
+├── week_01_02_visualizer.py   # Neurons, forward pass, gradient descent
+├── week_03_04_visualizer.py   # Convolutions, pooling, CNN architectures
+├── week_05_06_visualizer.py   # SSL, RNNs, LSTM, vanishing gradients
+├── week_07_visualizer.py      # Attention, transformers, KV cache
+├── week_08_10_visualizer.py   # VAE, GAN, diffusion, ethics
+├── week_11_visualizer.py      # Tokenization, pre-training, RLHF, RAG
+└── run_visualizations.py      # Main launcher for all weeks
+```
+
+**Features of visualizers:**
+- Step-by-step animated ASCII diagrams
+- Interactive menus for exploring concepts
+- Conceptual explanations alongside visualizations
+- No dependencies (pure Python)
+
 ## Current Workspace Structure
 
 ```
@@ -241,6 +282,22 @@ Solution: StyleMatch story continues (2026-2028):
 ├── DEEP_LEARNING_TO_LLM_APPLICATIONS.md   # Course to LLMs (frontier)
 ├── DL_AND_LLM_IN_PRODUCTION.md            # Hybrid DL+LLM systems (integration)
 ├── STYLEMATCH_PART_2_THE_LLM_ERA.md       # StyleMatch LLM story (narrative cont.)
+│
+├── Week_01_02_Foundations.md              # Neural network basics
+├── Week_03_04_CNNs_Training.md            # CNNs and training techniques
+├── Week_05_06_SSL_RNNs.md                 # Self-supervised learning, RNNs
+├── Week_07_Attention_Transformers.md      # Attention and Transformers
+├── Week_08_10_Advanced_Topics.md          # Advanced topics
+├── Week_11_Large_Language_Models.md       # LLM comprehensive guide (NEW)
+│
+├── visualizations/                        # Interactive ASCII visualizers (NEW)
+│   ├── run_visualizations.py              # Main launcher
+│   ├── week_01_02_visualizer.py           # Foundations visualizer
+│   ├── week_03_04_visualizer.py           # CNNs visualizer
+│   ├── week_05_06_visualizer.py           # SSL/RNNs visualizer
+│   ├── week_07_visualizer.py              # Attention visualizer
+│   ├── week_08_10_visualizer.py           # Advanced topics visualizer
+│   └── week_11_visualizer.py              # LLM visualizer
 │
 ├── lectures/                              # Original course lectures
 ├── assignments/                           # Programming assignments
@@ -371,10 +428,12 @@ Solution: StyleMatch story continues (2026-2028):
 
 ### For Students New to Deep Learning
 1. Start with course lectures (theory foundation)
-2. Read `UNIFIED_INTUITION.md` alongside lectures (see connections)
-3. Reference `PITFALLS_GUIDE.md` when doing assignments (avoid mistakes)
-4. Read `IN_PRODUCTION.md` after course completion (see real applications)
-5. Read `STYLEMATCH_STORY.md` to see how education connects to careers
+2. Run `python visualizations/run_visualizations.py` to see concepts animated
+3. Read `UNIFIED_INTUITION.md` alongside lectures (see connections)
+4. Reference `PITFALLS_GUIDE.md` when doing assignments (avoid mistakes)
+5. Read `IN_PRODUCTION.md` after course completion (see real applications)
+6. Read `Week_11_Large_Language_Models.md` for comprehensive LLM coverage
+7. Read `STYLEMATCH_STORY.md` to see how education connects to careers
 
 ### For Practitioners
 1. Skim `UNIFIED_INTUITION.md` to refresh concepts
@@ -435,6 +494,8 @@ Solution: StyleMatch story continues (2026-2028):
 - Bridge (DL_TO_LLM) → connecting course to modern LLMs
 - Integration (DL_AND_LLM) → how DL and LLM work together in production
 - Continuation (STYLEMATCH_PART_2) → adapting to the LLM era
+- LLM Deep Dive (WEEK_11) → complete LLM stack from tokenization to RAG
+- Interactive (VISUALIZATIONS) → animated ASCII diagrams for all concepts
 
 ## Future Extensions
 
@@ -531,7 +592,7 @@ When working in this workspace:
 
 ---
 
-*Last updated: January 2026 (Phase 10)*
+*Last updated: January 2026 (Phase 11)*
 *Workspace purpose: Comprehensive deep learning education from theory to production to people*
 
 ## Changelog
@@ -546,3 +607,4 @@ When working in this workspace:
 - **Phase 8**: Added DEEP_LEARNING_TO_LLM_APPLICATIONS.md (bridging course to modern LLM development)
 - **Phase 9**: Added DL_AND_LLM_IN_PRODUCTION.md (4 case studies of hybrid DL+LLM production systems)
 - **Phase 10**: Added STYLEMATCH_PART_2_THE_LLM_ERA.md (StyleMatch story continues into LLM integration)
+- **Phase 11**: Added Week_11_Large_Language_Models.md (comprehensive LLM guide) and visualizations/ folder (interactive ASCII visualizers for all weeks)

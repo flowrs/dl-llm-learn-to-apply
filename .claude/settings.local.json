@@ -8,7 +8,10 @@
       "Bash(dir \"C:\\\\dev\\\\keytech\\\\ai\\\\4931g\" /s /b)",
       "Bash(git init:*)",
       "Bash(cmd //c \"rename 4931g dl-llm-learn-to-apply\")",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial commit: Deep Learning to LLM Applications learning repository\n\nComprehensive documentation connecting deep learning course concepts\nto production systems and modern LLM applications.\n\nDocuments included:\n- DEEP_LEARNING_UNIFIED_INTUITION.md: Core concepts and connections\n- DEEP_LEARNING_PITFALLS_GUIDE.md: Common mistakes and debugging\n- DEEP_LEARNING_IN_PRODUCTION.md: 4 DL production case studies\n- BUILDING_ML_ORGANIZATIONS.md: Teams, hiring, and roles\n- STYLEMATCH_THE_FULL_STORY.md: Narrative case study \\(DL era\\)\n- LIMITS_OF_DEEP_LEARNING.md: When NOT to use DL\n- DEEP_LEARNING_TO_LLM_APPLICATIONS.md: Bridge from DL to LLMs\n- DL_AND_LLM_IN_PRODUCTION.md: 4 hybrid DL+LLM case studies\n- STYLEMATCH_PART_2_THE_LLM_ERA.md: Narrative continues \\(LLM era\\)\n- CLAUDE.md: Workspace guide and document map\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh repo create:*)",
+      "Bash(ls:*)"
     ]
   }
 }
